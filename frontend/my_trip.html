@@ -1,0 +1,24 @@
+<div class="trips-grid">
+    {% for trip in trips %}
+    <div class="trip-card">
+        <h3>{{ trip.selected_dest }}</h3>
+        <p>{{ trip.duration }} Days | {{ trip.vibe }}</p>
+        
+        <div class="actions">
+            <!-- EDIT: Sends them back to the chatbot -->
+            <a href="/trips/resume/{{ trip.id }}" class="btn-edit">Edit with AI</a>
+            
+            <!-- SHARE: A simple button to copy the link -->
+            <button onclick="copyLink('{{ trip.id }}')" class="btn-share">Copy Share Link</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+function copyLink(id) {
+    const link = window.location.origin + "/public/trip/" + id;
+    navigator.clipboard.writeText(link);
+    alert("Shareable link copied!");
+}
+</script>

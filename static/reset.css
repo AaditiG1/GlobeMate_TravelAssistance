@@ -1,0 +1,147 @@
+/* ==========================================================================
+   GLOBEMATE RESET PASSWORD - PROFESSIONAL THEME
+   ========================================================================== */
+
+.reset-page-container {
+    background: #0f172a; /* Midnight Navy */
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+/* Card Styling */
+.reset-card {
+    background: #ffffff;
+    padding: 50px 40px;
+    border-radius: 28px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.4);
+    text-align: center;
+}
+
+/* Header & Icons */
+.security-icon {
+    font-size: 3.5rem;
+    color: #A3B1AA; /* Sage Green */
+    margin-bottom: 20px;
+}
+
+.reset-header h2 {
+    color: #2D1B10; /* Espresso Brown */
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.reset-header .highlight {
+    color: #A3B1AA;
+}
+
+.reset-header p {
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 35px;
+}
+
+/* Form Layout */
+.input-stack {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.field-group {
+    margin-bottom: 20px;
+}
+
+.field-group label {
+    display: block;
+    font-weight: 800;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #2D1B10;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-wrapper i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #cbd5e1;
+    transition: 0.3s;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 14px 15px 14px 45px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.input-wrapper input:focus {
+    border-color: #A3B1AA;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(163, 177, 170, 0.1);
+}
+
+.input-wrapper input:focus + i {
+    color: #A3B1AA;
+}
+
+/* Submit Button */
+.submit-btn {
+    width: 100%;
+    background-color: #2D1B10;
+    color: #F5E6D3;
+    border: none;
+    padding: 16px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.submit-btn:hover {
+    background-color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Error Message */
+.error-banner {
+    margin-top: 20px;
+    background: #ffebee;
+    color: #c62828;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid #ffcdd2;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up {
+    animation: fadeInUp 0.6s ease forwards;
+}

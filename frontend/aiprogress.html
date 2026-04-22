@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}AI Discovery Progress - GlobeMate{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/aiprogress.css">
+<section class="ai-processing-wrapper">
+    
+    <!-- Header Section -->
+    <div class="page-intro animate-fade-down">
+        <h1>AI Discovery Engine</h1>
+        <p>Analyzing global datasets to find your perfect match <i class="fa-solid fa-microchip"></i></p>
+    </div>
+
+    <div class="processing-glass-container">
+        
+        <!-- LEFT PANEL: Live Tracker -->
+        <div class="progress-tracker-panel">
+            <h3 class="panel-title">System Analysis</h3>
+            
+            <ul class="dynamic-progress-list" id="aiProgressList">
+                <li class="pending"><i class="fa-solid fa-circle-notch fa-spin"></i> Initializing global database scan...</li>
+                <li class="pending"><i class="fa-solid fa-circle-notch"></i> Applying temporal and seasonal filters...</li>
+                <li class="pending"><i class="fa-solid fa-circle-notch"></i> Running TF-IDF vibe similarity matching...</li>
+                <li class="pending"><i class="fa-solid fa-circle-notch"></i> Computing budget regression models...</li>
+                <li class="pending"><i class="fa-solid fa-circle-notch"></i> Cross-referencing traveler style data...</li>
+                <li class="pending"><i class="fa-solid fa-circle-notch"></i> Fetching real-time weather forecasts...</li>
+                <li class="pending"><i class="fa-solid fa-circle-notch"></i> Structuring optimal itineraries...</li>
+            </ul>
+            
+            <div class="loading-section">
+                <div class="timer-header">
+                    <label>Discovery Progress:</label>
+                    <span id="progressPercentage">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progressBar"></div>
+                </div>
+            </div>
+
+            <!-- SUCCESS BOX (Hidden until finish) -->
+            <div class="result-status-box" id="statusBox">
+                <h4><i class="fa-solid fa-circle-check"></i> Process Complete</h4>
+                <p>Top 5 matching destinations have been identified.</p>
+                <button onclick="window.location.href='/trip-results'" class="view-results-btn">
+                    Reveal Recommendations <i class="fa-solid fa-arrow-right-long"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: Logic Explanation -->
+        <div class="methodology-panel">
+            <h3 class="panel-title">How It Works</h3>
+            <div class="methodology-stack">
+                <div class="method-card">
+                    <div class="method-header">
+                        <span class="step-num">1</span>
+                        <h4>Vibe Vectorization</h4>
+                    </div>
+                    <p>NLP transforms your vibe tags into numerical vectors for precise matching.</p>
+                </div>
+                <div class="method-card">
+                    <div class="method-header">
+                        <span class="step-num">2</span>
+                        <h4>Predictive Budgeting</h4>
+                    </div>
+                    <p>Our trained <strong>Regression</strong> model calculates costs based on indices.</p>
+                </div>
+                <div class="method-card">
+                    <div class="method-header">
+                        <span class="step-num">3</span>
+                        <h4>Contextual Ranking</h4>
+                    </div>
+                    <p>Final scores are weighted by weather and travel style compatibility.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MINIMAL SUCCESS POP-UP -->
+<div id="finishModal" class="minimal-modal-overlay" style="display: none;">
+    <div class="minimal-modal-content animate-pop">
+        <div class="minimal-check-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+        <h3>Discovery Ready</h3>
+        <p>AI has finalized your matches.</p>
+        <button onclick="window.location.href='/trip-results'" class="minimal-btn">View Results</button>
+    </div>
+</div>
+
+<!-- SCRIPTS -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const steps = document.querySelectorAll("#aiProgressList li");
+        const progressBar = document.getElementById("progressBar");
+        const progressPercentage = document.getElementById("progressPercentage");
+        const statusBox = document.getElementById("statusBox");
+        const finishModal = document.getElementById("finishModal");
+        
+        let currentStep = 0;
+        const totalSteps = steps.length;
+        const timePerStep = 800; // Fast progression
+
+        const processInterval = setInterval(() => {
+            if (currentStep < totalSteps) {
+                const activeStep = steps[currentStep];
+                activeStep.classList.remove("pending");
+                activeStep.classList.add("completed");
+                
+                const icon = activeStep.querySelector("i");
+                if (icon) icon.className = "fa-solid fa-circle-check";
+
+                if (currentStep + 1 < totalSteps) {
+                    steps[currentStep + 1].querySelector("i").classList.add("fa-spin");
+                }
+
+                currentStep++;
+                const percentage = Math.round((currentStep / totalSteps) * 100);
+                progressBar.style.width = percentage + "%";
+                progressPercentage.innerText = percentage + "%";
+            } else {
+                clearInterval(processInterval);
+                
+                // Show the standard status box
+                statusBox.classList.add("show-success");
+
+                // Trigger Minimal Pop-up after a slight delay
+                setTimeout(() => {
+                    finishModal.style.display = 'flex';
+                }, 600);
+            }
+        }, timePerStep);
+    });
+</script>
+{% endblock %}

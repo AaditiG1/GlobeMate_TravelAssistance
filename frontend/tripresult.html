@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}AI Recommendations - GlobeMate{% endblock %}
+
+{% block content %}
+<!-- This link ensures your page stays clean -->
+<link rel="stylesheet" href="/static/tripresult.css">
+
+<main class="recommendation-container" 
+      style="background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('/static/images/plantrip.png'); background-size: cover; background-attachment: fixed;">
+             
+    <!-- 1. HEADER SUMMARY -->
+    <div class="results-header-box animate-fade-down">
+        <h1>AI Discovery Results for "{{ trip_name }}"</h1>
+        <div class="params-summary">
+            <span><i class="fa-solid fa-wand-magic-sparkles"></i> {{ vibe }}</span>
+            <span><i class="fa-solid fa-wallet"></i> Rs. {{ "{:,.0f}".format(budget) }}</span>
+            <span><i class="fa-solid fa-calendar-day"></i> {{ duration }} Days</span>
+        </div>
+    </div>
+
+    <!-- 2. RECOMMENDATIONS GRID -->
+    <div class="recommendations-grid">
+        {% if results %}
+            {% for res in results %}
+            <div class="res-card-advanced animate-fade-up {% if res.is_over_budget %}border-warning{% endif %}">
+                
+                <div class="card-image-box">
+                    <img src="{{ res.image }}" alt="{{ res.name }}" class="res-main-img">
+                    <div class="match-badge-overlay">{{ res.vibe_score }}% Match</div>
+                </div>
+
+                <div class="card-top-info">
+                    <div class="res-title">
+                        <h2>{{ res.name }}, {{ res.country }}</h2>
+                    </div>
+                    <p class="res-tagline">{{ res.description }}</p>
+                </div>
+
+                <div class="res-details-split">
+                   
+                    <div class="match-breakdown-box">
+                        <h3>Match Analysis</h3>
+                        <ul>
+                            <li>
+                                <div class="label-row"><span>Vibe Match</span> <strong>{{ res.vibe_score }}%</strong></div>
+                                <div class="mini-bar">
+                                    <div class="fill progress-bar" data-percent="{{ res.vibe_score }}"></div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="label-row"><span>Budget Fit</span> <strong>{{ res.budget_score }}%</strong></div>
+                                <div class="mini-bar">
+                                    <div class="fill progress-bar" data-percent="{{ res.budget_score }}"></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- AI Financial Insights -->
+                    <div class="ai-insights-box">
+                        <h3>AI Financial Prediction</h3>
+                        <p class="predicted-cost">Predicted Total: <strong>Rs. {{ "{:,.0f}".format(res.estimated_cost | float) }}</strong></p>
+                        
+                        {% if res.is_over_budget %}
+                            <p class="budget-alert text-danger">
+                                <i class="fa-solid fa-circle-exclamation"></i> Over budget by Rs. {{ "{:,.0f}".format(res.shortfall) }}
+                            </p>
+                        {% else %}
+                            <p class="budget-alert text-success">
+                                <i class="fa-solid fa-circle-check"></i> Within budget! (Surplus: Rs. {{ "{:,.0f}".format(res.remaining_budget) }})
+                            </p>
+                        {% endif %}
+                        
+                        <small>Optimized for a <strong>{{ traveler_type }}</strong> style journey.</small>
+                    </div>
+                </div>
+
+                <!-- Action Row -->
+                <div class="card-actions-row">
+                    <button type="button" class="action-btn primary-glow" onclick="showSelectPopup('{{ res.name }}', '{{ loop.index }}')">
+                        SELECT & VIEW ITINERARY <i class="fa-solid fa-route"></i>
+                    </button>
+
+                    <form id="select-form-{{ loop.index }}" action="/select-destination" method="POST" style="display: none;">
+                        <input type="hidden" name="dest_name" value="{{ res.name }}">
+                    </form>
+                    
+                    <button class="action-btn outline">SAVE</button>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</main>
+
+<!-- 3. CUSTOM SELECTION POP-UP -->
+<div id="confirmOverlay" class="custom-modal-overlay" style="display: none;">
+    <div class="custom-modal-card">
+        <div class="modal-icon"><i class="fa-solid fa-earth-asia"></i></div>
+        <h2 id="modalTitle">Confirm Journey</h2>
+        <p id="modalBody">Ready to generate your plan?</p>
+        <div class="modal-buttons">
+            <button class="modal-btn cancel" onclick="hideSelectPopup()">Go Back</button>
+            <button class="modal-btn confirm" id="finalConfirmBtn">Start Generating Plan</button>
+        </div>
+    </div>
+</div>
+
+<!-- PAGE SCRIPTS -->
+<script>
+    // --- 1. AUTO-FILL PROGRESS BARS (Fixes your VS Code Error) ---
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll('.progress-bar').forEach(bar => {
+            const pct = bar.getAttribute('data-percent');
+            bar.style.width = pct + "%";
+        });
+    });
+
+    // --- 2. MODAL LOGIC ---
+    let activeFormId = null;
+
+    function showSelectPopup(destName, index) {
+        activeFormId = "select-form-" + index;
+        document.getElementById('modalTitle').innerText = "Journey to " + destName;
+        document.getElementById('modalBody').innerText = "Are you sure? GlobeMate will now generate your itinerary for " + destName + " based on your profile.";
+        document.getElementById('confirmOverlay').style.display = 'flex';
+    }
+
+    function hideSelectPopup() {
+        document.getElementById('confirmOverlay').style.display = 'none';
+    }
+
+    document.getElementById('finalConfirmBtn').addEventListener('click', function() {
+        if (activeFormId) {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Building Plan...';
+            this.disabled = true;
+            document.getElementById(activeFormId).submit();
+        }
+    });
+
+    window.onclick = (e) => { if (e.target.id === 'confirmOverlay') hideSelectPopup(); }
+</script>
+{% endblock %}

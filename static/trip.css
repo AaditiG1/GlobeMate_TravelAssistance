@@ -1,0 +1,98 @@
+/* Plan Trip Page Styles */
+
+body.trip-page {
+    margin: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #E6F3F7;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* pushes footer to bottom */
+}
+
+.trip-content {
+    flex-grow: 1;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.trip-heading h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 34px;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.trip-heading p {
+    color: #5a6a72;
+    margin-bottom: 45px;
+    font-size: 15px;
+}
+
+/* Form Box */
+.trip-form-box {
+    background: #fff;
+    max-width: 700px;
+    margin: auto;
+    padding: 45px 60px;
+    border: 1px solid #999;
+    text-align: left;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.form-step {
+    font-size: 18px;
+    margin-bottom: 35px;
+    font-weight: 600;
+}
+
+/* Form Layout Alignment */
+.form-line {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.form-line label {
+    width: 200px; /* Align all inputs */
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.form-line input,
+.form-line select {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #999;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.date-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex: 1;
+}
+
+/* Button */
+.action-area {
+    margin-top: 35px;
+    text-align: left;
+}
+
+.next-btn {
+    background: white;
+    border: 1px solid #333;
+    padding: 10px 32px;
+    border-radius: 28px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.next-btn:hover {
+    background: #2D4739;
+    color: white;
+    border-color: #2D4739;
+}

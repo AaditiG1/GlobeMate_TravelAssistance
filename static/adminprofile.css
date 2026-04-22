@@ -1,0 +1,233 @@
+/* ==========================================================================
+   GLOBEMATE ADMIN PROFILE - COMMAND CENTER THEME
+   ========================================================================== */
+
+
+
+/* 1. Layout Engine - Anchored to Sidebar */
+body.admin-mode {
+    background-color: var(--cream-bg) !important;
+    background-image: none !important;
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+.admin-main-wrapper {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
+    min-height: 100vh;
+    padding: 60px 50px;
+    box-sizing: border-box;
+    display: block; /* Ensures natural flow */
+}
+
+.profile-container {
+    max-width: 1000px;
+    margin: 0; /* Aligned left next to sidebar */
+}
+
+/* 2. Page Title */
+.page-title {
+    color: var(--primary-brown);
+    font-size: 2.4rem;
+    font-weight: 800;
+    margin-bottom: 40px;
+    border-left: 6px solid var(--sage-green);
+    padding-left: 25px;
+    letter-spacing: -0.5px;
+}
+
+/* 3. High-End Dashboard Cards */
+.profile-info-card, .progress-overview {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 24px;
+    margin-bottom: 35px;
+    border: 1px solid #edf2f7;
+    box-shadow: var(--card-shadow);
+}
+
+.profile-info-card h3, .progress-overview h3 {
+    color: var(--primary-brown);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 35px;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-info-card h3 i, .progress-overview h3 i {
+    color: var(--sage-green);
+}
+
+/* 4. Avatar Identity Section */
+.profile-avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 45px;
+}
+
+.avatar-wrapper {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    padding: 6px;
+    background: linear-gradient(135deg, var(--sage-green), var(--accent-cyan));
+    border-radius: 50%;
+}
+
+.avatar-wrapper img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--white);
+    background: var(--white);
+}
+
+.role-badge {
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary-brown);
+    color: #F5E6D3;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 6px 16px;
+    border-radius: 30px;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* 5. Professional Grid Form */
+.modern-profile-form .form-row {
+    display: grid;
+    grid-template-columns: 200px 1fr; /* Exact alignment */
+    align-items: center;
+    margin-bottom: 25px;
+    gap: 20px;
+}
+
+.modern-profile-form label {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.modern-profile-form input {
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    color: var(--primary-brown);
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.modern-profile-form input:focus {
+    border-color: var(--accent-cyan);
+    background: var(--white);
+    box-shadow: 0 0 0 4px rgba(128, 222, 234, 0.1);
+    outline: none;
+}
+
+.readonly-field {
+    background: #f1f5f9 !important;
+    color: var(--text-muted);
+    cursor: not-allowed;
+    border-style: dashed;
+}
+
+/* 6. Admin Action Button */
+.admin-btn {
+    background: var(--primary-brown);
+    color: #F5E6D3;
+    border: none;
+    padding: 18px;
+    width: 100%;
+    border-radius: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 15px;
+}
+
+.admin-btn:hover {
+    background: #000;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* 7. System Oversight Stats */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.stat-card {
+    background: #f8fafc;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    border: 1.5px solid #e2e8f0;
+    transition: var(--transition);
+}
+
+.stat-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--sage-green);
+    background: var(--white);
+    box-shadow: var(--card-shadow);
+}
+
+.stat-card p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 0;
+}
+
+.stat-number {
+    display: block;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--primary-brown);
+    margin: 12px 0 20px;
+}
+
+.view-btn {
+    background: var(--white);
+    border: 1.5px solid var(--sage-green);
+    color: var(--sage-green);
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.view-btn:hover {
+    background: var(--sage-green);
+    color: var(--white);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 1100px) {
+    .admin-main-wrapper { padding: 40px 30px; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .modern-profile-form .form-row { grid-template-columns: 1fr; gap: 8px; }
+}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GlobeMate{% endblock %}</title>
+    
+    <!-- 1. External Icons (FontAwesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 2. Global Root Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', path='/root.css') }}">
+    
+    <!-- Notification Specific Styles (Simple & Professional) -->
+    <style>
+        .notif-badge {
+            background: #ff4444;
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 50%;
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            display: none; /* Hidden by default */
+        }
+        .unread-item { background: rgba(163, 177, 170, 0.1); border-left: 3px solid #A3B1AA; }
+        .notif-time-track { font-size: 0.7rem; color: #888; display: block; margin-top: 4px; }
+    </style>
+
+    {% if request.session.get('role') == 'admin' %}
+        <link rel="stylesheet" href="{{ url_for('static', path='/headeradmin.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', path='/footeradmin.css') }}">
+    {% else %}
+        <link rel="stylesheet" href="{{ url_for('static', path='/headercustomer.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', path='/footercustomer.css') }}">
+    {% endif %}
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="{% if request.session.get('role') == 'admin' %}admin-mode{% else %}customer-mode{% endif %}">
+
+    {% if request.session.get('role') == 'admin' %}
+        {% include "navbars/headeradmin.html" %}
+    {% else %}
+        {% include "navbars/headercustomer.html" %}
+    {% endif %}
+
+    <div class="main-wrapper-logic">
+        <main class="content-block-anchor">
+            {% block content %}{% endblock %}
+        </main>
+
+        {% if request.session.get('role') == 'admin' %}
+            {% include "navbars/footeradmin.html" %}
+        {% else %}
+            {% include "navbars/footercustomer.html" %}
+        {% endif %}
+    </div>
+
+    <!-- REAL-TIME NOTIFICATION ENGINE -->
+    <script>
+        
+        // 1. Function to calculate "Time Ago" (Date Track)
+        function timeSince(dateString) {
+            const seconds = Math.floor((new Date() - new Date(dateString)) / 1000);
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + "y ago";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + "mo ago";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + "d ago";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + "h ago";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + "m ago";
+            return "Just now";
+        }
+
+        // 2. Fetch and Update UI across all pages
+        async function fetchLiveNotifications() {
+            try {
+                const response = await fetch('/api/notifications/live');
+                const data = await response.json();
+
+                // Update the Red Badge (assuming your header has an element with ID 'notifBadge')
+                const badge = document.querySelector('.notif-badge') || document.getElementById('notifBadge');
+                if (badge) {
+                    if (data.unread_count > 0) {
+                        badge.innerText = data.unread_count;
+                        badge.style.display = 'inline-block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+                // Update the List (assuming your header dropdown has an element with ID 'notifList')
+                const list = document.getElementById('notifList');
+                if (list && data.notifications) {
+                    list.innerHTML = data.notifications.length ? '' : '<p style="padding:10px; font-size:0.8rem; color:#666;">No new notifications</p>';
+                    data.notifications.forEach(n => {
+                        list.innerHTML += `
+                            <div class="notif-item ${n.is_read ? '' : 'unread-item'}" style="padding:10px; border-bottom:1px solid #eee;">
+                                <strong style="font-size:0.85rem; display:block;">${n.title}</strong>
+                                <p style="font-size:0.8rem; margin:2px 0; color:#444;">${n.message}</p>
+                                <span class="notif-time-track">${timeSince(n.time)}</span>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (err) {
+                // User is likely not logged in, ignore errors
+            }
+        }
+
+        // Run every 15 seconds for real-time updates
+        setInterval(fetchLiveNotifications, 15000);
+        fetchLiveNotifications(); // Initial call
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

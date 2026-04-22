@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}GlobeMate - Home{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/home.css">
+
+<main class="home-portal-container">
+    
+    <!-- 1. Hero Search Section -->
+    <section class="portal-hero" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/static/images/home.png');">
+        <div class="hero-content">
+            <h1 class="animate-fade-down">Where to next?</h1>
+            <p>Hi {{ user.full_name.split(' ')[0] if user else 'Traveler' }}! Your AI travel mate is ready to help you explore.</p>
+            
+            <!-- SUCCESS PILLAR: REDIRECT / RESUME LOGIC -->
+            {% if active_trip %}
+            <div class="active-resume-box animate-fade-up">
+                <div class="resume-info">
+                    <i class="fa-solid fa-person-walking-luggage"></i>
+                    <span>Currently planning: <strong>{{ active_trip.selected_dest }}</strong></span>
+                </div>
+                <button class="resume-cta-btn" onclick="window.location.href='/chatbot'">
+                    RESUME AI CHAT <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+            {% else %}
+            <div class="floating-search-bar">
+                <div class="search-input">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <input type="text" placeholder="What's your vibe today?">
+                </div>
+                <button class="portal-search-btn" onclick="window.location.href='/plan-trip'">Start Planning</button>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- 2. Dashboard Stats Bar -->
+    <div class="dashboard-stats-wrapper">
+        <div class="stat-card">
+            <span class="stat-label">VISITED</span>
+            <div class="stat-value">{{ visited_count }} <span class="unit">Places</span></div>
+        </div>
+        
+        <div class="stat-card">
+            <span class="stat-label">PLANNED</span>
+            <div class="stat-value">{{ planned_count }} <span class="unit">Upcoming</span></div>
+        </div>
+        
+        <div class="stat-card">
+            <span class="stat-label">AVG BUDGET</span>
+            <div class="stat-value">Rs. {{ avg_budget }}</div>
+        </div>
+        
+        <div class="stat-card highlight-ai">
+            <span class="stat-label">AI DISCOVERIES</span>
+            <div class="stat-value">{{ ai_discovery_count }}</div>
+            <i class="fa-solid fa-brain ai-icon-bg"></i>
+        </div>
+    </div>
+
+    <!-- 3. Trending Section -->
+    <div class="portal-main-body">
+        <section class="portal-section">
+            <div class="section-header">
+                <h2>Trending Destinations</h2>
+                <a href="/explore" class="view-all">View all</a>
+            </div>
+            <div class="destination-grid">
+                <div class="dest-card" onclick="window.location.href='/plan-trip'">
+                    <div class="dest-img" style="background-image: url('/static/images/japan.png');"></div>
+                    <div class="dest-info">
+                        <h3>Kyoto, Japan</h3>
+                        <p>Culture & Tradition</p>
+                        <span class="price">Plan with AI</span>
+                    </div>
+                </div>
+                <div class="dest-card" onclick="window.location.href='/plan-trip'">
+                    <div class="dest-img" style="background-image: url('/static/images/greece.png');"></div>
+                    <div class="dest-info">
+                        <h3>Santorini, Greece</h3>
+                        <p>Romantic Getaway</p>
+                        <span class="price">Plan with AI</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+{% endblock %}

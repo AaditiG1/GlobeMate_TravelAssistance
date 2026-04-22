@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/destination.css">
+<link rel="stylesheet" href="/static/admin-modal.css">
+
+<!-- TOAST ALERTS -->
+{% set msg = request.query_params.get('msg') %}
+{% if msg == 'added' %}
+    <div class="toast-alert success" id="statusToast">✅ Destination Added to Database!</div>
+{% elif msg == 'deleted' %}
+    <div class="toast-alert info" id="statusToast">🗑️ Destination Removed.</div>
+{% elif msg == 'error' %}
+    <div class="toast-alert error" id="statusToast">❌ Error: System failed to save data.</div>
+{% endif %}
+
+<div class="admin-main-wrapper">
+    <div class="profile-container">
+        
+        <!-- PAGE HEADER -->
+        <header class="page-action-header">
+            <div class="title-area">
+                <h1 class="page-title">Destination <span class="accent">Inventory</span></h1>
+                <p>Manage the locations GlobeMate suggests to travelers.</p>
+            </div>
+            <button class="add-btn" onclick="openModal()"><i class="fas fa-plus"></i> Add New Place</button>
+        </header>
+
+        <!-- SEARCH & STATS BAR -->
+        <div class="filter-bar card-glass">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="destSearch" placeholder="Search by city, country or vibe..." onkeyup="filterTable()">
+            </div>
+            <div class="table-stats">
+                Registry: <strong>{{ destinations|length }}</strong> Locations
+            </div>
+        </div>
+
+        <!-- DESTINATION TABLE -->
+        <div class="data-table-container card-glass">
+            <table class="admin-table" id="destTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>City / Destination</th>
+                        <th>Country</th>
+                        <th>Vibe Tags</th>
+                        <th>Avg. Budget</th>
+                        <th style="text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if destinations %}
+                        {% for d in destinations %}
+                        <tr>
+                            <td>#{{ d.id }}</td>
+                            <td><strong>{{ d.name }}</strong></td>
+                            <td>{{ d.country }}</td>
+                            <td><span class="tag-pill">{{ d.vibe_tags }}</span></td>
+                            <td><span class="price-text">Rs. {{ "{:,.0f}".format(d.avg_daily_cost) }}</span></td>
+                            <td style="text-align: right;">
+                                <button class="icon-btn delete" onclick="openDeleteModal('{{ d.id }}', '{{ d.name }}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <!-- Hidden form for deletion -->
+                                <form id="delete-form-{{ d.id }}" action="/admin/destination/delete/{{ d.id }}" method="POST" style="display:none;"></form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="6" style="text-align:center; padding: 50px;">No destinations found.</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL 1: ADD DESTINATION (With Validation) -->
+<div id="destModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card animate-pop">
+        <div class="modal-header">
+            <h3>Add New Destination</h3>
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+        </div>
+        <form id="addDestForm" action="/admin/destination/add" method="POST" class="modal-form">
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>City Name</label>
+                    <input type="text" name="name" id="valName" required placeholder="e.g. Pokhara">
+                </div>
+                <div class="input-group">
+                    <label>Country</label>
+                    <input type="text" name="country" id="valCountry" required placeholder="e.g. Nepal">
+                </div>
+                <div class="input-group">
+                    <label>Vibe Tags (Comma separated)</label>
+                    <input type="text" name="vibe_tags" id="valVibes" required placeholder="Adventure, Nature">
+                </div>
+                <div class="input-group">
+                    <label>Daily Budget (Rs.)</label>
+                    <input type="number" name="avg_daily_cost" id="valCost" min="100" required placeholder="5000">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>AI Description (Context for AI reasoning)</label>
+                <textarea name="description" id="valDesc" rows="3" required placeholder="Pokhara is known for its stunning mountain views..."></textarea>
+            </div>
+            <div id="formError" style="color: #e07a5f; font-size: 0.85rem; margin-bottom: 10px; display: none;"></div>
+            <button type="button" onclick="validateAndSubmit()" class="save-btn">Save to Registry</button>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL 2: DELETE CONFIRMATION -->
+<div id="deleteModal" class="admin-modal-overlay" style="display: none;">
+    <div class="admin-modal-content animate-pop">
+        <div class="admin-modal-icon"><i class="fa-solid fa-circle-exclamation"></i></div>
+        <h3>Remove Destination</h3>
+        <p id="deleteMsg">Are you sure?</p>
+        <div class="admin-modal-footer">
+            <button class="admin-btn-secondary" onclick="closeDeleteModal()">Keep It</button>
+            <button id="confirmDeleteBtn" class="admin-btn-danger">Delete Destination</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// 1. Search Filter
+function filterTable() {
+    let input = document.getElementById("destSearch").value.toUpperCase();
+    let tr = document.getElementById("destTable").getElementsByTagName("tr");
+    for (let i = 1; i < tr.length; i++) {
+        tr[i].style.display = tr[i].textContent.toUpperCase().includes(input) ? "" : "none";
+    }
+}
+
+// 2. Add Modal & Validation
+function openModal() { document.getElementById("destModal").style.display = "flex"; }
+function closeModal() { document.getElementById("destModal").style.display = "none"; }
+
+function validateAndSubmit() {
+    const cost = document.getElementById('valCost').value;
+    const desc = document.getElementById('valDesc').value;
+    const err = document.getElementById('formError');
+
+    if (cost < 500) {
+        err.innerText = "⚠️ Budget must be at least Rs. 500 for AI processing.";
+        err.style.display = "block";
+        return;
+    }
+    if (desc.length < 20) {
+        err.innerText = "⚠️ AI Description is too short. Please provide more context.";
+        err.style.display = "block";
+        return;
+    }
+    
+    document.getElementById('addDestForm').submit();
+}
+
+// 3. Delete Modal Logic
+const dModal = document.getElementById('deleteModal');
+function openDeleteModal(id, name) {
+    document.getElementById('deleteMsg').innerHTML = `You are about to remove <strong>${name}</strong> from the global registry. This will affect future user recommendations.`;
+    dModal.style.display = 'flex';
+    document.getElementById('confirmDeleteBtn').onclick = () => {
+        document.getElementById('delete-form-' + id).submit();
+    };
+}
+function closeDeleteModal() { dModal.style.display = 'none'; }
+
+// 4. Cleanup
+setTimeout(() => {
+    const t = document.getElementById('statusToast');
+    if(t) { t.style.opacity = '0'; setTimeout(() => t.remove(), 500); }
+}, 3000);
+
+window.onclick = (e) => { 
+    if(e.target.id == 'destModal') closeModal();
+    if(e.target.id == 'deleteModal') closeDeleteModal();
+}
+</script>
+{% endblock %}

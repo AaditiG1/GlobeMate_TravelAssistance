@@ -1,0 +1,306 @@
+/* ==========================================================================
+   GLOBEMATE COMMUNITY VLOG - MASTER STYLES
+   ========================================================================== */
+
+/* 1. HERO SECTION */
+.blog-hero {
+    height: 400px;
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/static/images/blog.png') center/cover;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.text-sage { color: var(--sage-green); }
+
+/* 2. ACTION BUTTONS & LOGIC */
+.action-box { margin-top: 30px; }
+
+.write-btn {
+    display: inline-block;
+    background: var(--sage-green);
+    color: var(--primary-brown);
+    padding: 14px 35px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 800;
+    transition: var(--transition);
+    border: 2px solid var(--sage-green);
+}
+
+.write-btn:hover {
+    background: transparent;
+    color: white;
+    transform: translateY(-3px);
+}
+
+.write-btn.outline {
+    background: transparent;
+    border: 2px solid var(--white);
+    color: white;
+}
+
+.locked-btn {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.1);
+    color: #bbb;
+    padding: 14px 30px;
+    border-radius: 50px;
+    cursor: not-allowed;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+/* 3. FEATURED STORIES (Supervisor Requirement) */
+.blog-layout-wrapper {
+    max-width: 1200px;
+    margin: -60px auto 60px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+}
+
+.section-title {
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+    color: var(--primary-brown);
+    font-weight: 800;
+}
+
+.featured-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.featured-card {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    border: 1px solid #eee;
+}
+
+.featured-card:hover {
+    transform: translateY(-10px);
+}
+
+.f-img {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+}
+
+.f-body { padding: 25px; }
+
+.f-tag {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--sage-green);
+    letter-spacing: 1px;
+}
+
+.f-body h3 { margin: 12px 0; font-size: 1.3rem; color: var(--primary-brown); }
+
+.f-body p { font-size: 0.95rem; color: #555; line-height: 1.6; }
+
+.f-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+/* 4. DYNAMIC FEED SECTION */
+.community-feed { margin-top: 60px; }
+
+.feed-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+}
+
+.blog-card {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid #eee;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+}
+
+.blog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+/* User Meta & Avatar Styling */
+.user-meta {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-brown);
+    color: #F5E6D3; /* Cream initial */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.3rem;
+    border: 2px solid var(--sage-green); /* Adds professional ring */
+}
+
+.blog-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.blog-info h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: var(--primary-brown);
+}
+
+.author-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.author-name {
+    font-weight: 700;
+    color: var(--sage-green); /* Highlighting the traveler's name */
+    font-size: 0.9rem;
+}
+
+.dot {
+    color: #ccc;
+    font-size: 1rem;
+}
+
+.blog-header small {
+    color: #888;
+}
+
+.rating-badge {
+    color: #f59e0b; /* Golden Yellow for Stars */
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+}
+.blog-content p {
+    font-size: 1.05rem;
+    color: #444;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* 5. THE COMPOSER (ADD BLOG PAGE) */
+.blog-composer-wrapper {
+    background-color: #0f172a; /* Dark background for focus */
+    min-height: 100vh;
+    padding: 100px 20px;
+}
+
+.composer-card-professional {
+    background: var(--white);
+    padding: 50px;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+}
+
+.input-group label {
+    display: block;
+    font-weight: 800;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--primary-brown);
+    margin-bottom: 10px;
+}
+
+.vlog-form input, .vlog-form textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    transition: var(--transition);
+}
+
+.vlog-form input:focus, .vlog-form textarea:focus {
+    border-color: var(--sage-green);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(163, 177, 170, 0.15);
+}
+
+/* Star Rating System */
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.star-rating input { display: none; }
+
+.star-rating label {
+    font-size: 2.2rem;
+    color: #ddd;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: var(--sage-green);
+}
+
+.btn-publish {
+    background: var(--sage-green);
+    color: var(--primary-brown);
+    padding: 16px 40px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-publish:hover {
+    background: var(--primary-brown);
+    color: white;
+}
+
+/* 6. UTILS */
+.divider { margin: 60px 0; border: 0; border-top: 1px solid #eee; }
+
+@media (max-width: 900px) {
+    .featured-grid { grid-template-columns: 1fr; }
+    .hero-content h1 { font-size: 2.5rem; }
+}

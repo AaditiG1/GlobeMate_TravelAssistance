@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/blog.css">
+
+<!-- 1. HERO SECTION -->
+<section class="blog-hero">
+    <div class="hero-overlay">
+        <div class="hero-content animate-fade-down">
+            <h1>Community <span class="text-sage">Blog</span></h1>
+            <p>Insights, tips, and tales from the GlobeMate inner circle.</p>
+            
+            <div class="action-box">
+                {% if blog_status == 'unlocked' %}
+                    <a href="/add-blog-check" class="write-btn">
+                        <i class="fa-solid fa-pen-fancy"></i> Share Your Experience
+                    </a>
+                {% elif blog_status == 'locked' %}
+                    <div class="locked-btn" title="Complete your ongoing trip to unlock blogging">
+                        <i class="fa-solid fa-lock"></i> Vlog Access Locked (Trip Ongoing)
+                    </div>
+                {% else %}
+                    <a href="/plan-trip" class="write-btn outline">
+                        <i class="fa-solid fa-plus"></i> Start a Trip to Write
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="blog-layout-wrapper">
+    
+    <!-- 2. FEATURED STORIES (Static) -->
+    <section class="featured-section">
+        <h2 class="section-title">Traveler <span class="text-sage">Spotlights</span></h2>
+        <div class="featured-grid">
+            <div class="featured-card">
+                <div class="f-img" style="background-image: url('/static/images/pokhara.png');"></div>
+                <div class="f-body">
+                    <span class="f-tag">Expert Traveler</span>
+                    <h3>Escape to Pokhara</h3>
+                    <p>"My 4-day escape to Pokhara, Nepal, was an incredible budget-friendly adventure... perfect, with crisp, sunny mornings."</p>
+                    <div class="f-footer">
+                        <strong>— Aarav G</strong>
+                        <span class="stars">★★★★★</span>
+                    </div>
+                </div>
+            </div>
+            <div class="featured-card">
+                <div class="f-img" style="background-image: url('/static/images/kyoto.png');"></div>
+                <div class="f-body">
+                    <span class="f-tag">Verified Mate</span>
+                    <h3>Kyoto</h3>
+                    <p>"For my 5-day cultural immersion in Kyoto, Japan, I managed a mid-range budget of about $900... stepping back in time."</p>
+                    <div class="f-footer">
+                        <strong>— Rohan S.</strong>
+                        <span class="stars">★★★★☆</span>
+                    </div>
+                </div>
+            </div>
+            <div class="featured-card">
+                <div class="f-img" style="background-image: url('/static/images/bali.png');"></div>
+                <div class="f-body">
+                    <span class="f-tag">Solo Explorer</span>
+                    <h3>Bali Escape</h3>
+                    <p>"My 5-day tropical escape to Ubud, Bali, was a vibrant mid-range journey... incredible mix of energy and relaxation."</p>
+                    <div class="f-footer">
+                        <strong>— Natasha P.</strong>
+                        <span class="stars">★★★★★</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- 3. SUCCESS PILLAR: COMMUNITY FEED (Updated to show User Names) -->
+    <section class="community-feed">
+        <h2 class="section-title">Recent <span class="text-sage">Vlogs</span></h2>
+        <div class="feed-container">
+            {% for blog in blogs %}
+            <div class="blog-card animate-fade-up">
+                <div class="blog-header">
+                    <div class="user-meta">
+                        <!-- Shows User's initial instead of Title's initial -->
+                        <div class="user-avatar">{{ blog.owner.full_name[0] | upper }}</div>
+                        <div class="blog-info">
+                            <h3>{{ blog.title }}</h3>
+                            <div class="author-line">
+                                <span class="author-name">by {{ blog.owner.full_name }}</span>
+                                <span class="dot">•</span>
+                                <small>Posted on {{ blog.created_at.strftime('%B %d, %Y') }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="rating-badge">{{ "★" * blog.rating }}</span>
+                </div>
+                <div class="blog-content">
+                    <p>{{ blog.content }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,265 @@
+/* Central Planning Box */
+/* --- Plan Trip Page Wrapper --- */
+.plan-trip-container {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 80px;
+}
+
+/* --- Hero Banner (Dark Image at Top) --- */
+.trip-hero-banner {
+    width: 90%;
+    max-width: 1100px;
+    height: 350px;
+    border-radius: 20px;
+    margin-top: 30px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.hero-text h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.hero-text p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* --- Floating Card Logic --- */
+.plan-trip-card-floating {
+    background: #ffffff;
+    width: 90%;
+    max-width: 650px;
+    border-radius: 15px;
+    margin-top: -80px; /* This creates the overlap effect */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 10;
+}
+
+.card-step-header {
+    background-color: #e0f7fa; /* Light Cyan Header */
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.step-badge {
+    background-color: #121d1f;; /* Darker Cyan Badge */
+    color: white;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.card-step-header h3 {
+    font-size: 1.1rem;
+    color: #2D1B10;
+    font-weight: 700;
+}
+
+/* --- Form Layout --- */
+.modern-trip-form {
+    padding: 40px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.input-wrapper input, .input-wrapper select {
+    width: 100%;
+    padding: 14px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #fff;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-wrapper input:focus {
+    border-color: #000000;
+}
+
+/* Row split for Date and Days */
+.form-row-split {
+    display: flex;
+    gap: 20px;
+}
+
+.form-row-split .form-group {
+    flex: 1;
+}
+
+.small-width {
+    max-width: 180px;
+}
+
+/* Icon Positions */
+.icon-left input, .icon-left select { padding-left: 45px; }
+.input-wrapper i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+.select-arrow {
+    left: auto !important;
+    right: 15px;
+    pointer-events: none;
+}
+
+/* --- Submit Button --- */
+.continue-vibe-btn {
+    width: 100%;
+    background-color: #121d1f;
+    color: #ffffff;
+    border: none;
+    padding: 16px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.continue-vibe-btn:hover {
+    background-color: #ceba90a7;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(9, 37, 41, 0.4);
+}
+
+/* Remove default select styling */
+select {
+    appearance: none;
+    cursor: pointer;
+}
+
+/* --- TRIP MODAL STYLES --- */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px); /* Beautiful background blur */
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.modal-icon {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    color: #A3B1AA;
+}
+
+.modal-content h2 {
+    color: #2D1B10;
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.modal-content p {
+    color: #64748b;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    width: 45px;
+    height: 45px;
+    border: 5px solid #f1f5f9;
+    border-top: 5px solid #A3B1AA;
+    border-radius: 50%;
+    margin: 20px auto;
+    animation: spin 1s linear infinite;
+}
+
+.modal-dismiss-btn {
+    background: #2D1B10;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Animations */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes popIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.animate-pop {
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+/* --- Responsive Layout --- */
+@media (max-width: 768px) {
+    .trip-hero-banner { height: 280px; }
+    .hero-text h1 { font-size: 2.2rem; }
+    .form-row-split { flex-direction: column; gap: 0; }
+    .small-width { max-width: 100%; }
+    .modern-trip-form { padding: 30px 20px; }
+}

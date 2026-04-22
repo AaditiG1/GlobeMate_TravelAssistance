@@ -1,0 +1,66 @@
+/* ==========================================
+   GLOBAL RESET & VARIABLES
+   ========================================== */
+:root {
+    --primary-brown: #2D1B10;
+    --accent-cyan: #80deea;
+    --accent-cyan-dark: #4dd0e1;
+    --sage-green: #A3B1AA;
+    --cream-bg: #f9fafb;
+    --text-muted: #64748b;
+    --white: #ffffff;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #0b1c23;
+    color: #333;
+    font-family: 'Montserrat', 'Segoe UI', sans-serif;
+}
+
+/* ==========================================
+   LAYOUT ENGINE (Prevents Hidden Content)
+   ========================================== */
+
+/* Admin Layout: Sidebar on left, Content on right */
+.admin-layout {
+    display: flex;
+}
+
+.admin-main-wrapper {
+    margin-left: 260px; /* This pushes content to the right of the sidebar */
+    width: calc(100% - 260px);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content-area {
+    flex: 1;
+    padding: 40px; /* General padding for all admin pages */
+}
+
+/* Customer Layout: Standard top-to-bottom */
+.customer-layout {
+    display: block;
+}
+
+.main-content {
+    min-height: 80vh;
+}
+/* If in Admin mode, push the whole wrapper to the right */
+.admin-mode .main-wrapper-logic {
+    margin-left: 260px; /* Width of admin sidebar */
+    width: calc(100% - 260px);
+}
+
+/* If in Customer mode, keep it full width */
+.customer-mode .main-wrapper-logic {
+    width: 100%;
+}

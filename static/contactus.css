@@ -1,0 +1,219 @@
+/* --- Contact Page Wrapper --- */
+
+.contact-page-wrapper {
+    width: 100vw;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding: 80px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contact-main-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr; /* Optimized ratio */
+    gap: 30px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+/* --- Common Card Styling --- */
+.contact-form-card, .info-card-animate, .faq-card-animate {
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    border: 1px solid #ddd;
+}
+
+.panel-title-underlined {
+    color: #2D1B10;
+    border-bottom: 3px solid #A3B1AA; /* Sage Green Underline */
+    display: inline-block;
+    padding-bottom: 5px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+/* --- FIX: Organized Contact Entry Rows --- */
+.contact-entry-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 25px;
+    align-items: flex-start; /* Keeps icon at the top of the text block */
+}
+
+.entry-icon-circle {
+    width: 50px;
+    height: 50px;
+    background: #F5E6D3; /* Cream Wheat */
+    color: #2D1B10; /* Espresso Brown */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0; /* Prevents circle from squishing */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.entry-data {
+    display: flex;
+    flex-direction: column; /* Vertical stack: Label -> Value -> Sub-info */
+    gap: 2px;
+}
+
+.entry-data label {
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #A3B1AA; /* Sage Green */
+    letter-spacing: 1px;
+}
+
+.entry-data a, .address-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #2D1B10;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.entry-data a:hover {
+    color: #A3B1AA;
+}
+
+.sub-label {
+    font-size: 0.8rem;
+    color: #777;
+    margin: 0;
+}
+
+/* --- ANIMATION: Info Card (Lift & Glow) --- */
+.info-card-animate {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-bottom: 30px;
+}
+
+.info-card-animate:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 40px rgba(163, 177, 170, 0.4); /* Sage Green Shadow Glow */
+    border-color: #A3B1AA;
+}
+
+/* --- ANIMATION: FAQ Card (Slide & Highlight) --- */
+.faq-card-animate {
+    transition: all 0.3s ease;
+}
+
+.faq-item-dynamic {
+    background: #fdfdfd;
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border-left: 0px solid #2D1B10;
+    transition: all 0.3s ease;
+}
+
+/* When the whole card is hovered, the items slide */
+.faq-card-animate:hover .faq-item-dynamic {
+    transform: translateX(10px);
+    border-left-width: 8px; /* Visual pop from the left */
+    background: #fff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.faq-q-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+    color: #2D1B10;
+    margin-bottom: 6px;
+}
+
+.faq-q-row i {
+    color: #A3B1AA;
+}
+
+.faq-answer-text {
+    font-size: 0.9rem;
+    color: #555;
+    padding-left: 30px;
+    line-height: 1.5;
+}
+
+/* --- Form Improvements --- */
+.form-row-custom {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+
+.form-row-custom label {
+    font-weight: 800;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: #2D1B10;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-row-custom label i {
+    color: #A3B1AA;
+}
+
+.form-row-custom input, .form-row-custom textarea {
+    padding: 14px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+.form-row-custom input:focus, .form-row-custom textarea:focus {
+    border-color: #A3B1AA;
+    outline: none;
+    box-shadow: 0 0 10px rgba(163, 177, 170, 0.3);
+}
+
+.contact-btn-glow {
+    width: 100%;
+    background: #2D1B10; /* Espresso */
+    color: #F5E6D3; /* Cream */
+    padding: 18px;
+    border: none;
+    border-radius: 35px;
+    font-weight: 800;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: 0.4s;
+    margin-top: 10px;
+}
+
+.contact-btn-glow:hover {
+    background: #041a11;
+    letter-spacing: 1.5px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    transform: translateY(-3px);
+}
+
+/* --- Responsive Layout --- */
+@media (max-width: 950px) {
+    .contact-main-grid {
+        grid-template-columns: 1fr;
+    }
+    .contact-entry-row {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}

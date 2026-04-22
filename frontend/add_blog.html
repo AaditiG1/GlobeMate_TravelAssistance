@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/blog.css">
+
+<section class="blog-composer-wrapper">
+    <div class="composer-container">
+        
+        {% if status == "locked" %}
+            <!-- LOCKED STATE UI -->
+            <div class="status-card-modern animate-fade-up">
+                <div class="status-icon-box">
+                    <i class="fa-solid fa-hourglass-start"></i>
+                </div>
+                <h2>Trip In Progress</h2>
+                <p>You cannot post a blog for <strong>"{{ ongoing_trip.trip_name }}"</strong> yet.</p>
+                
+                <div class="ongoing-info-badge">
+                    <div class="info-row">
+                        <span>Travel Dates:</span>
+                        <strong>{{ ongoing_trip.date_range }}</strong>
+                    </div>
+                    <div class="info-row">
+                        <span>Current Status:</span>
+                        <span class="status-tag-ongoing">ONGOING</span>
+                    </div>
+                </div>
+
+                <p class="subtext-muted">Blog access will unlock once your trip concludes.</p>
+                <button onclick="window.location.href='/home'" class="btn-primary-sage">Return to Dashboard</button>
+            </div>
+            
+        {% elif status == "unlocked" %}
+            <!-- UNLOCKED STATE: THE FORM -->
+            <div class="composer-card-professional animate-fade-up">
+                <header class="composer-header">
+                    <h2>Welcome Back!</h2>
+                    <p>Share your story about <strong>{{ eligible_trip.trip_name }}</strong> in {{ eligible_trip.selected_dest }}.</p>
+                </header>
+
+                <form action="/create-blog" method="POST" class="vlog-form">
+                    <!-- Essential: Hidden trip_id to link blog to database record -->
+                    <input type="hidden" name="trip_id" value="{{ eligible_trip.id }}">
+
+                    <div class="input-group">
+                        <label>Vlog Title</label>
+                        <input type="text" name="title" placeholder="e.g. My Magical Week in Pokhara" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Your Experience</label>
+                        <textarea name="content" rows="8" placeholder="What were the highlights? How was the weather? Any tips for other Mates?" required></textarea>
+                    </div>
+
+                    <div class="form-bottom-row">
+                        <div class="rating-container">
+                            <label>Rate your journey</label>
+                            <div class="star-rating">
+                                <input type="radio" name="rating" value="5" id="star5"><label for="star5">★</label>
+                                <input type="radio" name="rating" value="4" id="star4"><label for="star4">★</label>
+                                <input type="radio" name="rating" value="3" id="star3"><label for="star3">★</label>
+                                <input type="radio" name="rating" value="2" id="star2"><label for="star2">★</label>
+                                <input type="radio" name="rating" value="1" id="star1" checked><label for="star1">★</label>
+                            </div>
+                        </div>
+
+                        <div class="actions">
+                            <button type="button" onclick="history.back()" class="btn-outline">Cancel</button>
+                            <button type="submit" class="btn-publish">Publish My Story <i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+
+    </div>
+</section>
+{% endblock %}

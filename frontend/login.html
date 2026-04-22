@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | GlobeMate</title>
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    
+    <!-- SweetAlert2 for the Popup -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        .swal2-popup {
+            font-family: 'Montserrat', sans-serif !important;
+            border-radius: 15px !important;
+        }
+        .swal2-styled.swal2-confirm {
+            background-color: #8da290 !important; 
+        }
+    </style>
+</head>
+<body class="auth-page-body"> 
+
+<div class="auth-container">
+    <div class="auth-visual-side">
+        <img src="/static/images/login.png" alt="Login to GlobeMate" class="auth-hero-img">
+    </div>
+
+    <div class="auth-form-side">
+        <div class="auth-form-wrapper">
+            <div class="brand-header">
+                <h1>GLOBEMATE</h1>
+                <h3>Sign In to Your Account</h3>
+            </div>
+
+            <form id="loginForm" class="modern-auth-form">
+                <div class="input-group-fancy">
+                    <label for="email"><i class="fa-solid fa-envelope"></i> Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="input-group-fancy">
+                    <label for="password"><i class="fa-solid fa-lock"></i> Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+
+                <div class="auth-row-links">
+                    <div class="auth-checkbox-group">
+                        <input type="checkbox" id="remember">
+                        <label for="remember">Remember Me</label>
+                    </div>
+                    <a href="/auth/forgot-password" class="forgot-link">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="auth-submit-btn">
+                    Login <i class="fa-solid fa-right-to-bracket"></i>
+                </button>
+
+                <div class="divider"><span>OR</span></div>
+
+                <a href="/auth/google/login" class="google-login-btn">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"  
+                    alt="Google Logo" style="width:18px; margin-right:10px;"> Continue with Google
+                </a>
+            </form>
+
+            <p class="auth-switch-link">
+                Don't have an account? <a href="/register">Sign Up</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        const submitBtn = document.querySelector(".auth-submit-btn");
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authenticating...';
+
+        try {
+            const formData = new URLSearchParams();
+            formData.append("email", email);
+            formData.append("password", password);
+
+            const response = await fetch("/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (response.ok) { 
+                // DETERMINE THE ROLE (Default to 'User' if not provided)
+                const userRole = data.role ? data.role.charAt(0).toUpperCase() + data.role.slice(1) : "User";
+
+                // SUCCESS POPUP
+                Swal.fire({
+                    title: 'Login Successful!',
+                    text: `Successfully logged in as ${userRole}. Redirecting to dashboard...`,
+                    icon: 'success',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    allowOutsideClick: false
+                }).then(() => {
+                    window.location.href = data.redirect_url; 
+                });
+            } 
+            else { 
+                Swal.fire({
+                    title: 'Login Failed',
+                    text: data.message || "Invalid credentials",
+                    icon: 'error',
+                    confirmButtonText: 'Try Again'
+                });
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Login <i class="fa-solid fa-right-to-bracket"></i>';
+            }
+
+        } catch (error) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Connection error. Check your backend server.',
+                icon: 'warning'
+            });
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Login <i class="fa-solid fa-right-to-bracket"></i>';
+        }
+    });
+</script>
+
+</body>
+</html>

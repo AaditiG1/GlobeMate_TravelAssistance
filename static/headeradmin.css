@@ -1,0 +1,119 @@
+/* --- Sidebar Main Container --- */
+.admin-sidebar {
+    width: 260px;
+    height: 100vh;
+    background-color: #2D1B10; /* Your Espresso Brown */
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.3);
+    z-index: 1000;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* --- Logo & Brand Section --- */
+.sidebar-brand {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.logo-container img {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%; /* Makes your square logo circular */
+    background: white;
+    padding: 5px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.sidebar-brand h3 {
+    color: #F5E6D3; /* Cream */
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.sidebar-brand h3 span {
+    color: #A3B1AA; /* Sage Green */
+    font-size: 0.7rem;
+    display: block;
+    margin-top: 5px;
+}
+
+/* --- Navigation Links --- */
+.sidebar-nav {
+    flex: 1; /* Pushes the footer to the bottom */
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav ul li a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 25px;
+    text-decoration: none; /* Removes the blue underline */
+    color: #F5E6D3;       /* Cream color text */
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+/* Icon Colors */
+.sidebar-nav ul li a i {
+    width: 20px;
+    color: #A3B1AA; /* Sage Green Icons */
+    font-size: 1.1rem;
+}
+
+/* --- Hover & Active States --- */
+.sidebar-nav ul li a:hover {
+    background: rgba(163, 177, 170, 0.1); /* Subtle Sage tint */
+    color: #fff;
+    border-left: 4px solid #A3B1AA;
+    padding-left: 30px; /* Slight slide effect */
+}
+
+.sidebar-nav ul li a.active {
+    background: #A3B1AA;
+    color: #2D1B10;
+    border-left: 4px solid #F5E6D3;
+}
+
+.sidebar-nav ul li a.active i {
+    color: #2D1B10;
+}
+
+/* --- Footer / Logout --- */
+.sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid rgba(245, 230, 211, 0.1);
+}
+
+.logout-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #e07a5f; /* Terracotta Red for contrast */
+    font-weight: 800;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.logout-link:hover {
+    background: rgba(224, 122, 95, 0.1);
+    border-radius: 8px;
+    transform: translateX(5px);
+}

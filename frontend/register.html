@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join GlobeMate | Registration</title>
+    <!-- Font Awesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Link to the separate CSS files -->
+    <link rel="stylesheet" href="/static/style.css">
+    
+</head>
+<body class="auth-page-body"> 
+
+<div class="auth-container">
+    <!-- Left Visual Side -->
+    <div class="auth-visual-side">
+        <img src="/static/images/register.jpg" alt="Register" class="auth-hero-img">
+        <div class="visual-overlay">
+            <h2>Start your adventure.</h2>
+            <p>Your personalized AI itinerary is just a click away.</p>
+        </div>
+    </div>
+
+    <!-- Right Form Side -->
+    <div class="auth-form-side">
+        <div class="auth-form-wrapper">
+            <div class="brand-header">
+                <h1>GLOBEMATE</h1>
+                <h3>Create Account</h3>
+            </div>
+
+            <form id="registerForm" class="modern-auth-form">
+                <div class="input-group-fancy">
+                    <label><i class="fa-solid fa-user"></i> Full Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="input-group-fancy">
+                    <label><i class="fa-solid fa-envelope"></i> Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="input-group-fancy">
+                    <label><i class="fa-solid fa-lock"></i> Password</label>
+                    <input type="password" id="password" placeholder="Min. 8 characters" required>
+                </div>
+                
+                <div class="input-group-fancy">
+                    <label><i class="fa-solid fa-shield-check"></i> Confirm Password</label>
+                    <input type="password" id="confirm_password" placeholder="Repeat password" required>
+                </div>
+
+                <div class="auth-checkbox-group">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">I agree to the Terms & Privacy Policy</label>
+                </div>
+
+                <button type="submit" class="auth-submit-btn" id="submitBtn">
+                    Sign Up <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <p class="auth-switch-link">
+                Already part of the community? <a href="/login">Sign In</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- SUCCESS/ERROR POPUP MODAL -->
+<div id="validationModal" class="modal-overlay">
+    <div class="modal-box">
+        <div id="modalIcon" class="modal-icon"></div>
+        <h3 id="modalTitle">Title</h3>
+        <p id="modalMsg">Message.</p>
+        <button class="modal-btn" onclick="closeModal()">Continue</button>
+    </div>
+</div>
+
+<script>
+    const modal = document.getElementById('validationModal');
+    const mTitle = document.getElementById('modalTitle');
+    const mMsg = document.getElementById('modalMsg');
+    const mIcon = document.getElementById('modalIcon');
+
+    function showPopup(title, message, type) {
+        mTitle.innerText = title;
+        mMsg.innerText = message;
+        mIcon.innerHTML = type === 'error' ? 
+            '<i class="fa-solid fa-triangle-exclamation icon-error"></i>' : 
+            '<i class="fa-solid fa-circle-check icon-success"></i>';
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() { modal.style.display = 'none'; }
+
+    document.getElementById("registerForm").addEventListener("submit", async function(e){
+        e.preventDefault();
+        const btn = document.getElementById("submitBtn");
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const confirm = document.getElementById("confirm_password").value;
+
+        // 1. Logic Validations
+        if (password.length < 8) return showPopup("Weak Password", "Security requires at least 8 characters.", "error");
+        if (password !== confirm) return showPopup("Mismatch", "Passwords do not match. Please re-type.", "error");
+
+        // 2. Submit
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+        try {
+            const response = await fetch("/auth/register", { 
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({ full_name: name, email: email, password: password })
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                showPopup("Success!", "Account created! Moving to login...", "success");
+                setTimeout(() => { window.location.href = "/login"; }, 2000);
+            } else {
+                showPopup("Registration Failed", data.message, "error");
+                btn.disabled = false;
+                btn.innerText = "Sign Up";
+            }
+        } catch (error) {
+            showPopup("Server Error", "Check your internet connection.", "error");
+            btn.disabled = false;
+            btn.innerText = "Sign Up";
+        }
+    });
+</script>
+</body>
+</html>

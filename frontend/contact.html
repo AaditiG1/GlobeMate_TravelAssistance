@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - GlobeMate{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/contactus.css">
+<section class="contact-page-wrapper" style="background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url('/static/images/aboutus.png');">
+    
+    <div class="page-intro">
+        <h1>Connect with Us</h1>
+        <p>Our team and AI are here to assist your journey.</p>
+    </div>
+
+    <div class="contact-main-grid">
+        
+        <!-- LEFT COLUMN: Contact Form -->
+        <div class="contact-card contact-form-card">
+            <h3 class="panel-title-underlined">Send a Message</h3>
+            <form action="/submit-contact" method="POST" class="advanced-form">
+                <div class="form-row-custom">
+                    <label><i class="fa-solid fa-signature"></i> Name</label>
+                    <input type="text" name="name" placeholder="Your Full Name" required>
+                </div>
+                <div class="form-row-custom">
+                    <label><i class="fa-solid fa-at"></i> Email</label>
+                    <input type="email" name="email" placeholder="Your Email Address" required>
+                </div>
+                <div class="form-row-custom">
+                    <label><i class="fa-solid fa-pen-to-square"></i> Subject</label>
+                    <input type="text" name="subject" placeholder="What is this regarding?">
+                </div>
+                <div class="form-row-custom message-area">
+                    <label><i class="fa-solid fa-comment-dots"></i> Message</label>
+                    <textarea name="message" rows="5" placeholder="Tell us how we can help..." required></textarea>
+                </div>
+                <button type="submit" class="contact-btn-glow">
+                    Send Message <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- RIGHT COLUMN: Organized Info & FAQ -->
+        <div class="contact-side-panels">
+            
+            <!-- CARD 1: REACH OUT DIRECTLY (Fixed Alignment) -->
+            <div class="contact-card info-card-animate">
+                <h3 class="panel-title-underlined">Reach Out Directly</h3>
+                
+                <!-- Email Entry -->
+                <div class="contact-entry-row">
+                    <div class="entry-icon-circle"><i class="fa-solid fa-envelope-open-text"></i></div>
+                    <div class="entry-data">
+                        <label>Email Support</label>
+                        <a href="mailto:globematesupport@gmail.co">globematesupport@gmail.co</a>
+                        <span class="sub-label">Avg. response: 24 hours</span>
+                    </div>
+                </div>
+
+                <!-- Phone Entry -->
+                <div class="contact-entry-row">
+                    <div class="entry-icon-circle"><i class="fa-solid fa-phone-volume"></i></div>
+                    <div class="entry-data">
+                        <label>Call Center</label>
+                        <a href="tel:+9779845678960">+977-9845678960</a>
+                        <span class="sub-label">Mon-Fri, 9am - 6pm</span>
+                    </div>
+                </div>
+
+                <!-- Location Entry -->
+                <div class="contact-entry-row">
+                    <div class="entry-icon-circle"><i class="fa-solid fa-map-location-dot"></i></div>
+                    <div class="entry-data">
+                        <label>Office Headquarters</label>
+                        <p class="address-text">Globemate Travels, Kathmandu, Nepal</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARD 2: QUICK HELP (Slide & Expand Animation) -->
+            <div class="contact-card faq-card-animate">
+                <h3 class="panel-title-underlined">Quick Help</h3>
+                
+                <div class="faq-item-dynamic">
+                    <div class="faq-q-row">
+                        <i class="fa-solid fa-circle-question"></i>
+                        <span>How does the AI finder work?</span>
+                    </div>
+                    <p class="faq-answer-text">Our ML model cross-references your vibe with global destination data to find your match.</p>
+                </div>
+
+                <div class="faq-item-dynamic">
+                    <div class="faq-q-row">
+                        <i class="fa-solid fa-circle-question"></i>
+                        <span>Is GlobeMate free to use?</span>
+                    </div>
+                    <p class="faq-answer-text">Yes, all core AI exploration and destination discovery features are free.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- MINIMAL SUCCESS POP-UP -->
+<div id="contactSuccessModal" class="contact-modal-overlay" style="display: none;">
+    <div class="contact-modal-card animate-pop">
+        <div class="contact-modal-icon">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h3>Message Sent!</h3>
+        <p>Thank you for reaching out. Our team has received your message and will respond shortly.</p>
+        <button onclick="closeContactModal()" class="contact-btn-glow" style="margin-top: 10px; width: auto; padding: 10px 30px;">Close</button>
+    </div>
+</div>
+
+<!-- SCRIPTS FOR POPUP LOGIC -->
+<script>
+    // 1. Check if URL has ?msg=sent
+    document.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('msg') === 'sent') {
+            document.getElementById('contactSuccessModal').style.display = 'flex';
+        }
+    });
+
+    function closeContactModal() {
+        // This removes the "?msg=sent" from the URL so it doesn't pop up again on refresh
+        window.history.replaceState({}, document.title, window.location.pathname);
+        document.getElementById('contactSuccessModal').style.display = 'none';
+    }
+</script>
+
+<style>
+    /* POPUP STYLES */
+    .contact-modal-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        display: flex; justify-content: center; align-items: center;
+        z-index: 1000;
+    }
+    
+    .contact-modal-card {
+        background: white; 
+        padding: 40px; 
+        border-radius: 20px;
+        text-align: center; 
+        max-width: 400px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    
+    .contact-modal-icon {
+        font-size: 3.5rem; 
+        color: #A3B1AA; /* Sage Green */
+        margin-bottom: 15px;
+    }
+    
+    .contact-modal-card h3 {
+        color: #2D1B10; /* Espresso Brown */
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        font-weight: 800;
+    }
+    
+    .contact-modal-card p {
+        color: #64748b;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+
+    /* Animation */
+    .animate-pop { animation: popIn 0.3s ease-out; }
+    @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+</style>
+{% endblock %}

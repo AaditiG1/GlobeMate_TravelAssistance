@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Profile - GlobeMate{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/adminprofile.css">
+
+<!-- The admin-main-wrapper pushes everything to the right of the sidebar -->
+<div class="admin-main-wrapper">
+    <section class="profile-page-wrapper admin-theme">
+        
+        <div class="profile-container">
+            <h1 class="page-title">Admin Command Center</h1>
+
+            <div class="profile-info-card">
+                <h3><i class="fa-solid fa-user-shield"></i> Administrator Details</h3>
+                
+                <!-- Admin Avatar Preview -->
+                <div class="profile-avatar-section">
+                    <div class="avatar-wrapper">
+                        <!-- Shows current image or default logo -->
+                        <img id="admin-photo" src="{{ user.image_url if user.image_url else '/static/images/logo.png' }}" alt="Admin">
+                        <span class="role-badge">SUPER ADMIN</span>
+                    </div>
+                </div>
+
+                <form id="adminProfileForm" class="modern-profile-form">
+                    <div class="form-row">
+                        <label>Admin Name:</label>
+                        <input type="text" name="name" value="{{ user.full_name if user else 'Chief Admin' }}">
+                    </div>
+
+                    <!-- ADDED: This is the input your JavaScript needs! -->
+                    <div class="form-row">
+                        <label>Profile Image URL:</label>
+                        <input type="text" id="admin-url-input" name="image_url" placeholder="Paste image link here..." value="{{ user.image_url if user.image_url else '' }}">
+                    </div>
+                
+                    <div class="form-row">
+                        <label>System Email:</label>
+                        <input type="text" value="{{ user.email if user else 'admin@globemate.com' }}" readonly class="readonly-field">
+                    </div>
+                    <div class="form-row">
+                        <label>Update Password:</label>
+                        <input type="password" name="password" placeholder="Enter new security key">
+                    </div>
+                    <button type="submit" class="save-btn admin-btn">Update Admin Security</button>
+                </form>
+            </div>
+
+
+    </section>
+</div>
+
+<script>
+    // Fixed: Correct ID mapping for the live preview
+    const urlInput = document.getElementById('admin-url-input');
+    const photoPreview = document.getElementById('admin-photo');
+
+    urlInput.addEventListener('input', function() {
+        if(this.value.trim() !== "") {
+            photoPreview.src = this.value;
+        } else {
+            photoPreview.src = "/static/images/logo.png";
+        }
+    });
+</script>
+{% endblock %}

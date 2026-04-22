@@ -1,0 +1,65 @@
+/* ==========================================================================
+   GLOBEMATE ADMIN - RESPONSIVE ANALYTICS THEME
+   ========================================================================== */
+
+
+
+/* 1. Base Layout Engine */
+body.admin-mode {
+    background-color: var(--bg-light) !important;
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+.admin-main-wrapper {
+    margin-left: var(--sidebar-width); /* Standard Desktop */
+    width: calc(100% - var(--sidebar-width));
+    min-height: 100vh;
+    padding: 40px;
+    box-sizing: border-box;
+    transition: var(--transition);
+}
+
+.reports-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+.reports-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
+.reports-header h1 { font-size: 2.2rem; color: #2D1B10; margin: 0; font-weight: 800; }
+.text-sage { color: #A3B1AA; }
+
+/* KPI Cards */
+.reports-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+.report-mini-card {
+    background: #fff; border-radius: 16px; padding: 25px; display: flex; align-items: center; gap: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid #eee;
+}
+.card-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+.card-icon.brown { background: rgba(45, 27, 16, 0.1); color: #2D1B10; }
+.card-icon.sage { background: rgba(163, 177, 170, 0.1); color: #A3B1AA; }
+.card-icon.cyan { background: rgba(128, 222, 234, 0.1); color: #4dd0e1; }
+
+.card-info h3 { margin: 5px 0 0; color: #2D1B10; font-size: 1.3rem; }
+.card-info label { font-size: 0.75rem; color: #888; text-transform: uppercase; font-weight: 700; }
+
+/* Charts */
+.charts-main-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 25px; margin-bottom: 30px; }
+.card-glass { background: #fff; padding: 30px; border-radius: 20px; border: 1px solid #eee; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
+.canvas-holder { height: 250px; position: relative; }
+
+/* Table Styling */
+.report-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+.report-table th { text-align: left; padding: 15px; font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; background: #f8fafc; }
+.report-table td { padding: 15px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+.user-cell strong { display: block; color: #2D1B10; font-size: 0.9rem; }
+.user-cell small { color: #888; font-size: 0.75rem; }
+.dest-pill { background: #2D1B10; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+.pill-green { color: #10b981; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; }
+.empty-row { text-align: center; padding: 40px; color: #cbd5e1; }
+
+.export-btn { 
+    background: #fff; border: 1.5px solid #eee; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: 0.3s;
+}
+.export-btn:hover { background: #f8fafc; border-color: #ccc; }

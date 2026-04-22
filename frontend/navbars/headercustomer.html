@@ -1,0 +1,143 @@
+<!-- frontend/navbars/headercustomer.html -->
+<header class="customer-header">
+    <div class="header-container">
+
+        <!-- Logo LEFT -->
+        <a href="/home" class="logo-area">
+            <img src="/static/images/logo.png" alt="Globemate Logo">
+            <span class="brand-name">GLOBEMATE</span>
+        </a>
+
+        <!-- Menu RIGHT -->
+        <nav class="main-nav">
+            <ul class="nav-list">
+                <li><a href="/home" class="nav-link"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a href="/plan-trip" class="nav-link"><i class="fa-solid fa-map-location-dot"></i> Plan Trip</a></li>
+                <li><a href="/explore" class="nav-link"><i class="fa-solid fa-compass"></i> Explore</a></li>
+                <li><a href="/blogs" class="nav-link"><i class="fa-solid fa-pen-nib"></i> Community</a></li>
+                <li><a href="/chatbot" class="nav-link"><i class="fa-solid fa-comments"></i> AI Chat</a></li>
+                <li><a href="/customer-profile" class="icon-link" title="My Profile"><i class="fa-solid fa-circle-user"></i></a></li>
+
+                <!-- Notification Icon + Dropdown -->
+                <li class="notif-wrapper" id="notifWrapper">
+                    <button type="button" class="notif-trigger-btn" onclick="toggleNotifDropdown()" title="Notifications">
+                        <i class="fa-solid fa-bell"></i>
+                        <!-- Badge handled entirely by JavaScript now for real-time accuracy -->
+                        <span id="globalNotifBadge" class="notif-badge" style="display: none;">0</span>
+                    </button>
+
+                    <!-- THE FLOATING DROPDOWN -->
+                    <div class="notif-dropdown" id="notifDropdown">
+                        <div class="notif-header">
+                            <span>Recent Updates</span>
+                            <a href="/notifications/mark-all-read" class="mark-all-link">Mark all as read</a>
+                        </div>
+                        
+                        <!-- DYNAMIC BODY -->
+                        <div class="notif-body" id="notifBody">
+                            <div class="notif-empty-state">
+                                <i class="fa-solid fa-spinner fa-spin"></i>
+                                <p>Syncing notifications...</p>
+                            </div>
+                        </div>
+                        
+                        <div class="notif-footer">
+                            <a href="/customer-profile">View Profile Summary</a>
+                        </div>
+                    </div>
+                </li>
+                
+                <li><a href="/auth/logout" class="icon-link logout-color" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<script>
+// 1. Helper: Calculate "Time Ago" (Date Tracking)
+function timeSince(dateString) {
+    // JavaScript 'new Date()' automatically converts UTC (Z) to Nepali local time
+    const past = new Date(dateString); 
+    const now = new Date();
+    const seconds = Math.floor((now - past) / 1000);
+
+    if (seconds < 10) return "Just now";
+    if (seconds < 60) return seconds + "s ago";
+    
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return minutes + "m ago";
+    
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return hours + "h ago";
+
+    return past.toLocaleDateString('en-NP'); // Fallback for old notifications
+}
+
+// 2. Main Logic: Load from API
+async function refreshLiveNotifications() {
+    try {
+        const response = await fetch('/api/notifications/live');
+        const data = await response.json();
+
+        // Update Badge
+        const badge = document.getElementById('globalNotifBadge');
+        if (data.unread_count > 0) {
+            badge.innerText = data.unread_count;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+
+        // Update Dropdown Content
+        const body = document.getElementById('notifBody');
+        if (data.notifications.length > 0) {
+            body.innerHTML = ""; // Clear
+            data.notifications.forEach(n => {
+                // Determine Icon based on Title (Intelligence logic)
+                let iconClass = "fa-circle-info";
+                if (n.title.toLowerCase().includes("ai")) iconClass = "fa-robot";
+                if (n.title.toLowerCase().includes("weather")) iconClass = "fa-cloud-sun";
+                if (n.title.toLowerCase().includes("complete")) iconClass = "fa-check-double";
+
+                body.innerHTML += `
+                    <div class="notif-item ${n.is_read ? '' : 'unread'}">
+                        <div class="notif-icon-box"><i class="fa-solid ${iconClass}"></i></div>
+                        <div class="notif-content">
+                            <strong>${n.title}</strong>
+                            <p>${n.message}</p>
+                            <small>${timeSince(n.time)}</small>
+                        </div>
+                    </div>
+                `;
+            });
+        } else {
+            body.innerHTML = `
+                <div class="notif-empty-state">
+                    <i class="fa-solid fa-bell-slash"></i>
+                    <p>No new notifications</p>
+                </div>`;
+        }
+    } catch (err) {
+        console.warn("Notification sync paused.");
+    }
+}
+
+// 3. UI Interactions
+function toggleNotifDropdown() {
+    document.getElementById('notifDropdown').classList.toggle('show');
+}
+
+// Close on outside click
+window.addEventListener('click', (e) => {
+    if (!document.getElementById('notifWrapper').contains(e.target)) {
+        document.getElementById('notifDropdown').classList.remove('show');
+    }
+});
+
+// 4. Execution
+document.addEventListener("DOMContentLoaded", () => {
+    refreshLiveNotifications();
+    // REAL-TIME: Check every 20 seconds
+    setInterval(refreshLiveNotifications, 20000); 
+});
+</script>

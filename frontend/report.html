@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}GlobeMate Admin - Analytics{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/report.css">
+
+<div class="admin-main-wrapper">
+    <div class="reports-container">
+        
+        <!-- HEADER SECTION -->
+        <header class="reports-header animate-fade-down">
+            <div class="title-meta">
+                <h1>System <span class="text-sage">Intelligence</span></h1>
+                <p>Monitoring AI itinerary generations and financial trends.</p>
+            </div>
+            <div class="header-actions">
+                <button class="export-btn" onclick="window.print()"><i class="fa-solid fa-file-export"></i> Export PDF</button>
+            </div>
+        </header>
+
+        <!-- KPI CARDS GRID -->
+        <div class="reports-stats-grid">
+            <div class="report-mini-card">
+                <div class="card-icon brown"><i class="fa-solid fa-wallet"></i></div>
+                <div class="card-info">
+                    <label>Avg. User Budget</label>
+                    <h3>Rs. {{ avg_budget }}</h3>
+                </div>
+            </div>
+            <div class="report-mini-card">
+                <div class="card-icon sage"><i class="fa-solid fa-wind"></i></div>
+                <div class="card-info">
+                    <label>Trending Vibe</label>
+                    <h3>{{ vibe_labels[0] if vibe_labels else "Discovery" }}</h3>
+                </div>
+            </div>
+            <div class="report-mini-card">
+                <div class="card-icon cyan"><i class="fa-solid fa-route"></i></div>
+                <div class="card-info">
+                    <label>Itineraries Generated</label>
+                    <h3>{{ reports|length }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHARTS SECTION -->
+        <div class="charts-main-grid">
+            <div class="chart-box card-glass">
+                <div class="chart-header">
+                    <h3><i class="fa-solid fa-chart-pie"></i> Vibe Distribution</h3>
+                </div>
+                <div class="canvas-holder">
+                    <canvas id="vibeChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-box card-glass">
+                <div class="chart-header">
+                    <h3><i class="fa-solid fa-chart-column"></i> Popular Destinations</h3>
+                </div>
+                <div class="canvas-holder">
+                    <canvas id="destChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUCCESS PILLAR: DETAILED ITINERARY LOG -->
+        <div class="chart-box full-width-table card-glass">
+            <div class="table-header">
+                <h3><i class="fa-solid fa-list-ul"></i> Recently Generated Itineraries</h3>
+                <p>Tracking destinations and budget allocations per user.</p>
+            </div>
+            <div class="table-scroll">
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>User Details</th>
+                            <th>Destination</th>
+                            <th>Budget (Rs.)</th>
+                            <th>Duration</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if reports %}
+                            {% for trip, user in reports %}
+                            <tr>
+                                <td>
+                                    <div class="user-cell">
+                                        <strong>{{ user.full_name }}</strong>
+                                        <small>{{ user.email }}</small>
+                                    </div>
+                                </td>
+                                <td><span class="dest-pill">{{ trip.selected_dest }}</span></td>
+                                <td><strong>{{ "{:,.0f}".format(trip.budget) if trip.budget else '0' }}</strong></td>
+                                <td>{{ trip.duration }} Days</td>
+                                <td><span class="pill-green">FINALIZED</span></td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="empty-row">No itineraries found in the database.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DATA BRIDGE FOR CHART.JS -->
+<div id="data-bridge" 
+     data-vibe-labels='{{ vibe_labels | tojson }}'
+     data-vibe-counts='{{ vibe_counts | tojson }}'
+     data-dest-labels='{{ dest_labels | tojson }}'
+     data-dest-counts='{{ dest_counts | tojson }}'
+     style="display: none;">
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const bridge = document.getElementById('data-bridge');
+    const vibeLabels = JSON.parse(bridge.getAttribute('data-vibe-labels')) || [];
+    const vibeCounts = JSON.parse(bridge.getAttribute('data-vibe-counts')) || [];
+    const destLabels = JSON.parse(bridge.getAttribute('data-dest-labels')) || [];
+    const destCounts = JSON.parse(bridge.getAttribute('data-dest-counts')) || [];
+
+    // VIBE CHART
+    new Chart(document.getElementById('vibeChart').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            labels: vibeLabels,
+            datasets: [{
+                data: vibeCounts,
+                backgroundColor: ['#2D1B10', '#A3B1AA', '#80deea', '#4dd0e1', '#64748b'],
+                hoverOffset: 10
+            }]
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } }
+        }
+    });
+
+    // DESTINATION CHART
+    new Chart(document.getElementById('destChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: destLabels,
+            datasets: [{
+                label: 'User Choices',
+                data: destCounts,
+                backgroundColor: '#A3B1AA',
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true }, x: { grid: { display: false } } }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,28 @@
+/* Customer Footer */
+
+.customer-footer {
+    background-color: #ffffff;
+    color: #423b2b;
+    padding: 40px 60px;
+    margin-top: 60px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* Brand section */
+.footer-brand h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.footer-brand p {
+    font-size: 14px;
+    color: #6f5214;
+}
+

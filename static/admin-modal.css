@@ -1,0 +1,111 @@
+/* --- GLOBEMATE UNIVERSAL ADMIN MODAL --- */
+
+/* 1. The Overlay (The background part) */
+.admin-modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(15, 17, 20, 0.85); /* Deep dark background */
+    backdrop-filter: blur(8px);        /* Modern blur effect */
+    display: none;                     /* Hidden by default, JS will change to 'flex' */
+    justify-content: center;
+    align-items: center;
+    z-index: 999999 !important;        /* Higher than everything else */
+}
+
+/* 2. The Modal Card */
+.admin-modal-content {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+}
+
+/* 3. Icon Styling */
+.admin-modal-icon {
+    font-size: 3.5rem;
+    color: #e07a5f; /* GlobeMate Terracotta */
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+/* 4. Text Styling */
+.admin-modal-content h3 {
+    color: #2D1B10; /* GlobeMate Espresso Brown */
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.admin-modal-content p {
+    color: #64748b; /* Professional Slate Gray */
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* 5. Button Container */
+.admin-modal-footer {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+/* 6. Button Base Styles */
+.admin-btn-danger, 
+.admin-btn-secondary {
+    padding: 14px 24px;
+    border-radius: 14px;
+    border: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    flex: 1;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Red Delete Button */
+.admin-btn-danger {
+    background: #e07a5f;
+    color: #ffffff;
+}
+
+.admin-btn-danger:hover {
+    background: #b91c1c;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(224, 122, 95, 0.4);
+}
+
+/* Gray Cancel Button */
+.admin-btn-secondary {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.admin-btn-secondary:hover {
+    background: #e2e8f0;
+    transform: translateY(-2px);
+}
+
+/* 7. The Entry Animation */
+.animate-pop {
+    animation: adminPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes adminPopIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}

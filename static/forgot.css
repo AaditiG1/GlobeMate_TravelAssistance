@@ -1,0 +1,139 @@
+/* ==========================================================================
+   GLOBEMATE FORGOT PASSWORD - SOFT MINIMALIST THEME
+   ========================================================================== */
+
+.recovery-wrapper {
+    background-color: #0f172a; /* Deep Navy */
+    min-height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Card Design */
+.recovery-card {
+    background: #ffffff;
+    padding: 45px 35px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+/* Icon & Typography */
+.mail-icon {
+    font-size: 2.5rem;
+    color: #A3B1AA; /* Sage Green */
+    margin-bottom: 15px;
+}
+
+.recovery-top h1 {
+    color: #2D1B10; /* Espresso */
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.accent-sage { color: #A3B1AA; }
+
+.recovery-top p {
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 30px;
+}
+
+/* Form Styles */
+.recovery-form {
+    text-align: left;
+}
+
+.input-container {
+    margin-bottom: 25px;
+}
+
+.input-container label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #2D1B10;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: 0.3s ease;
+    box-sizing: border-box;
+}
+
+.input-container input:focus {
+    border-color: #A3B1AA;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(163, 177, 170, 0.1);
+}
+
+/* Button Styling */
+.primary-btn {
+    width: 100%;
+    background-color: #2D1B10;
+    color: #F5E6D3;
+    border: none;
+    padding: 16px;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.primary-btn:hover {
+    background-color: #000;
+    transform: translateY(-2px);
+}
+
+/* Status Messages */
+.status-alert {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: none;
+}
+
+.success-bg { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+.error-bg { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+/* Footer Links */
+.recovery-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #f1f5f9;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.recovery-footer a {
+    color: #2D1B10;
+    text-decoration: none;
+    font-weight: 700;
+    margin-left: 5px;
+}
+
+.recovery-footer a:hover { text-decoration: underline; }
+
+/* Animations */
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.animate-zoom { animation: zoomIn 0.4s ease-out; }

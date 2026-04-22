@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}Vibe Selection - GlobeMate{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/vibe.css">
+<section class="vibe-selection-wrapper" style="background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('/static/images/plantrip.png');">
+    
+    <div class="page-intro animate-fade-down">
+        <h1>Define your vibe for <span>"{{ trip_name }}"</span></h1>
+        <p>Select the experiences that resonate with your journey</p>
+    </div>
+
+    <div class="vibe-glass-container animate-fade-up">
+        <form id="vibeSelectionForm" action="/vibe-selection" method="POST">
+            
+            <!-- SECTION 1: PRIMARY TRAVEL VIBES -->
+            <div class="vibe-section">
+                <h3 class="section-subtitle">Primary Travel Vibe (Choose 1-2)</h3>
+                <div class="primary-vibe-grid">
+                    <!-- 1. Beach & Relaxation -->
+                    <label class="vibe-card-advanced">
+                        <input type="checkbox" name="vibe" value="Beach and Relaxation">
+                        <div class="card-bg" style="background-image: url('/static/images/beach.png');"></div>
+                        <div class="card-overlay">
+                            <div class="card-top">
+                                <span>Beach & Relaxation</span>
+                                <i class="fa-solid fa-circle-check check-icon"></i>
+                            </div>
+                            <ul class="vibe-tags-modern"><li>Calm</li><li>Sun</li><li>Spa</li></ul>
+                        </div>
+                    </label>
+
+                    <!-- 2. Adventure & Nature -->
+                    <label class="vibe-card-advanced">
+                        <input type="checkbox" name="vibe" value="Adventure and Nature">
+                        <div class="card-bg" style="background-image: url('/static/images/nature.png');"></div>
+                        <div class="card-overlay">
+                            <div class="card-top">
+                                <span>Adventure & Nature</span>
+                                <i class="fa-solid fa-circle-check check-icon"></i>
+                            </div>
+                            <ul class="vibe-tags-modern"><li>Hiking</li><li>Mountains</li><li>Wildlife</li></ul>
+                        </div>
+                    </label>
+
+                    <!-- 3. City & Urban -->
+                    <label class="vibe-card-advanced">
+                        <input type="checkbox" name="vibe" value="City and Urban">
+                        <div class="card-bg" style="background-image: url('/static/images/city.png');"></div>
+                        <div class="card-overlay">
+                            <div class="card-top">
+                                <span>City & Urban</span>
+                                <i class="fa-solid fa-circle-check check-icon"></i>
+                            </div>
+                            <ul class="vibe-tags-modern"><li>Shopping</li><li>Nightlife</li><li>Modern</li></ul>
+                        </div>
+                    </label>
+
+                    <!-- 4. Cultural & Historical -->
+                    <label class="vibe-card-advanced">
+                        <input type="checkbox" name="vibe" value="Cultural and Historical">
+                        <div class="card-bg" style="background-image: url('/static/images/culture.png');"></div>
+                        <div class="card-overlay">
+                            <div class="card-top">
+                                <span>Cultural & Historical</span>
+                                <i class="fa-solid fa-circle-check check-icon"></i>
+                            </div>
+                            <ul class="vibe-tags-modern"><li>Museums</li><li>Temple</li><li>Art</li></ul>
+                        </div>
+                    </label>
+
+                    <!-- 5. Festival & Events -->
+                    <label class="vibe-card-advanced">
+                        <input type="checkbox" name="vibe" value="Festival and Events">
+                        <div class="card-bg" style="background-image: url('/static/images/festival.png');"></div>
+                        <div class="card-overlay">
+                            <div class="card-top">
+                                <span>Festival & Events</span>
+                                <i class="fa-solid fa-circle-check check-icon"></i>
+                            </div>
+                            <ul class="vibe-tags-modern"><li>Concert</li><li>Carnival</li><li>Culture</li></ul>
+                        </div>
+                    </label>
+
+                    <!-- 6. Food & Culinary -->
+                    <label class="vibe-card-advanced">
+                        <input type="checkbox" name="vibe" value="Food and Culinary">
+                        <div class="card-bg" style="background-image: url('/static/images/food.png');"></div>
+                        <div class="card-overlay">
+                            <div class="card-top">
+                                <span>Food & Culinary</span>
+                                <i class="fa-solid fa-circle-check check-icon"></i>
+                            </div>
+                            <ul class="vibe-tags-modern"><li>Wine Tasting</li><li>Local Cuisine</li></ul>
+                        </div>
+                    </label>
+
+                    <!-- 7. Shopping & Luxury -->
+                    <label class="vibe-card-advanced">
+                        <input type="checkbox" name="vibe" value="Shopping and Luxury">
+                        <div class="card-bg" style="background-image: url('/static/images/shopping.png');"></div>
+                        <div class="card-overlay">
+                            <div class="card-top">
+                                <span>Shopping & Luxury</span>
+                                <i class="fa-solid fa-circle-check check-icon"></i>
+                            </div>
+                            <ul class="vibe-tags-modern"><li>Mall</li><li>Market</li><li>Luxury</li></ul>
+                        </div>
+                    </label>
+
+                    <!-- 8. Wellness & Retreat -->
+                    <label class="vibe-card-advanced">
+                        <input type="checkbox" name="vibe" value="Wellness and Retreat">
+                        <div class="card-bg" style="background-image: url('/static/images/wellness.png');"></div>
+                        <div class="card-overlay">
+                            <div class="card-top">
+                                <span>Wellness & Retreat</span>
+                                <i class="fa-solid fa-circle-check check-icon"></i>
+                            </div>
+                            <ul class="vibe-tags-modern"><li>Yoga</li><li>Meditation</li><li>Detox</li></ul>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- SECTION 2: SECONDARY PREFERENCES -->
+            <div class="vibe-section">
+                <h3 class="section-subtitle">Secondary Preferences (Choose 1-2)</h3>
+                <div class="secondary-pref-grid">
+                    <label class="pref-square-advanced">
+                        <input type="checkbox" name="pref" value="history">
+                        <div class="pref-content"><i class="fa-solid fa-monument"></i><span>History</span></div>
+                    </label>
+                    <label class="pref-square-advanced">
+                        <input type="checkbox" name="pref" value="art">
+                        <div class="pref-content"><i class="fa-solid fa-palette"></i><span>Creative Art</span></div>
+                    </label>
+                    <label class="pref-square-advanced">
+                        <input type="checkbox" name="pref" value="music">
+                        <div class="pref-content"><i class="fa-solid fa-music"></i><span>Music</span></div>
+                    </label>
+                    <label class="pref-square-advanced">
+                        <input type="checkbox" name="pref" value="sport">
+                        <div class="pref-content"><i class="fa-solid fa-volleyball"></i><span>Activity</span></div>
+                    </label>
+                    <label class="pref-square-advanced">
+                        <input type="checkbox" name="pref" value="food">
+                        <div class="pref-content"><i class="fa-solid fa-utensils"></i><span>Dining</span></div>
+                    </label>
+                    <label class="pref-square-advanced">
+                        <input type="checkbox" name="pref" value="spiritual">
+                        <div class="pref-content"><i class="fa-solid fa-om"></i><span>Peace</span></div>
+                    </label>
+                    <label class="pref-square-advanced">
+                        <input type="checkbox" name="pref" value="nature">
+                        <div class="pref-content"><i class="fa-solid fa-tree"></i><span>Scenery</span></div>
+                    </label>
+                    <label class="pref-square-advanced">
+                        <input type="checkbox" name="pref" value="shopping">
+                        <div class="pref-content"><i class="fa-solid fa-bag-shopping"></i><span>Market</span></div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="vibe-action-area">
+                <button type="submit" class="vibe-next-btn-advanced">
+                    Continue to Budget Estimation <i class="fa-solid fa-arrow-right-long"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- MODAL POP-UP -->
+<div id="vibeModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content animate-pop">
+        <div class="modal-icon" id="vibeModalIcon">
+            <i class="fa-solid fa-compass-drafting"></i>
+        </div>
+        <h2 id="vibeModalTitle">Analyzing Vibe</h2>
+        <p id="vibeModalMessage">GlobeMate is matching your preferences with 100+ global destinations...</p>
+        <div id="vibeModalLoading" class="loading-spinner"></div>
+        <button id="vibeModalCloseBtn" class="vibe-next-btn-advanced" onclick="closeVibePopup()" style="display: none; width: auto; margin: 0 auto;">Review Choices</button>
+    </div>
+</div>
+
+<!-- SCRIPTS -->
+<script>
+    const form = document.getElementById('vibeSelectionForm');
+    const modal = document.getElementById('vibeModal');
+    const modalTitle = document.getElementById('vibeModalTitle');
+    const modalMsg = document.getElementById('vibeModalMessage');
+    const modalIcon = document.getElementById('vibeModalIcon');
+    const modalSpinner = document.getElementById('vibeModalLoading');
+    const modalBtn = document.getElementById('vibeModalCloseBtn');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // 1. Validation: Must select at least one vibe and one preference
+        const vibesChecked = document.querySelectorAll('input[name="vibe"]:checked').length;
+        const prefsChecked = document.querySelectorAll('input[name="pref"]:checked').length;
+
+        if (vibesChecked === 0 || prefsChecked === 0) {
+            showVibePopup("Missing Preferences", "Please select at least one Primary Vibe and one Secondary Preference to continue.", "error");
+            return;
+        }
+
+        // 2. Show Success/Loading Pop-up
+        showVibePopup("Vibe Locked!", "Synchronizing your style with our discovery engine. Calculating estimated costs...", "loading");
+
+        // 3. Submit after delay
+        setTimeout(() => {
+            form.submit();
+        }, 2000);
+    });
+
+    function showVibePopup(title, message, type) {
+        modalTitle.innerText = title;
+        modalMsg.innerText = message;
+        modal.style.display = 'flex';
+
+        if (type === 'error') {
+            modalIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color: #e07a5f;"></i>';
+            modalSpinner.style.display = 'none';
+            modalBtn.style.display = 'block';
+        } else {
+            modalIcon.innerHTML = '<i class="fa-solid fa-compass-drafting" style="color: #A3B1AA;"></i>';
+            modalSpinner.style.display = 'block';
+            modalBtn.style.display = 'none';
+        }
+    }
+
+    function closeVibePopup() {
+        modal.style.display = 'none';
+    }
+</script>
+{% endblock %}

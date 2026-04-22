@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Radar Explore - GlobeMate{% endblock %}
+
+{% block content %}
+<!-- External Map Resources -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="/static/explore.css">
+
+<section class="map-wrapper-full">
+    
+    <!-- THE FULL SCREEN MAP -->
+    <div id="exploreMap" class="map-instance"></div>
+
+    <!-- THE FLOATING COMMAND HUB -->
+    <div class="command-hub animate-fade-in">
+        <div class="hub-header">
+            <div class="radar-logo">
+                <i class="fa-solid fa-satellite-dish"></i>
+            </div>
+            <div>
+                <h3>Proximity <span class="text-sage">Radar</span></h3>
+                <p>5km Coverage Area</p>
+            </div>
+        </div>
+
+        <div class="hub-body">
+            <label class="hub-label">Set Gap Time</label>
+            <div class="modern-stepper">
+                <button onclick="changeTime(-0.5)">-</button>
+                <div class="val-display">
+                    <span id="displayTime">2.0</span>
+                    <small>Hours</small>
+                </div>
+                <button onclick="changeTime(0.5)">+</button>
+            </div>
+
+            <button id="radarBtn" class="radar-action-btn" onclick="startGlobalScan()">
+                <span id="btnText">Initialize Scan</span>
+                <div class="btn-ripple"></div>
+            </button>
+        </div>
+
+        <div id="statusIndicator" class="hub-footer">
+            <i class="fa-solid fa-location-crosshairs"></i>
+            <span>GPS Idle</span>
+        </div>
+    </div>
+
+</section>
+
+<!-- Leaflet Map JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    // 1. Initialize Map with a "Dark/Muted" professional theme
+    let map = L.map('exploreMap', { zoomControl: false, attributionControl: false }).setView([27.7172, 85.3240], 13);
+    
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
+
+    let userCircle = null;
+    let userMarker = null;
+
+    // 2. Stepper Logic
+    let currentTime = 2.0;
+    function changeTime(val) {
+        currentTime = Math.max(0.5, Math.min(12, currentTime + val));
+        document.getElementById('displayTime').innerText = currentTime.toFixed(1);
+    }
+
+    // 3. SUCCESS PILLAR: 5km Radius Logic
+    function startGlobalScan() {
+        const btn = document.getElementById('radarBtn');
+        const status = document.getElementById('statusIndicator');
+        
+        btn.classList.add('scanning');
+        document.getElementById('btnText').innerText = "Locating...";
+        status.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Syncing Satellite...</span>';
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((pos) => {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+
+                map.flyTo([lat, lng], 13, { duration: 2 });
+
+                if (userCircle) map.removeLayer(userCircle);
+                if (userMarker) map.removeLayer(userMarker);
+
+                // DRAW THE 5KM RADIUS
+                userCircle = L.circle([lat, lng], {
+                    radius: 5000, 
+                    color: '#A3B1AA',
+                    fillColor: '#A3B1AA',
+                    fillOpacity: 0.15,
+                    weight: 2,
+                    dashArray: '5, 10'
+                }).addTo(map);
+
+                userMarker = L.marker([lat, lng]).addTo(map);
+
+                setTimeout(() => {
+                    btn.classList.remove('scanning');
+                    document.getElementById('btnText').innerText = "Radar Active";
+                    status.innerHTML = '<i class="fa-solid fa-circle-check" style="color:#10b981"></i> <span>5km Radius Locked</span>';
+                }, 2000);
+
+            }, (err) => {
+                alert("Please enable GPS to use the radar.");
+                btn.classList.remove('scanning');
+            });
+        }
+    }
+</script>
+{% endblock %}

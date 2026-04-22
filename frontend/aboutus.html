@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - GlobeMate{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/aboutus.css">
+<section class="about-page-wrapper" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/static/images/aboutus.png');">
+        
+    <div class="about-main-header">
+        <h1>About GlobeMate</h1>
+        <p>Your AI Travel Companion</p>
+    </div>
+
+    <div class="about-layout-grid">
+        
+        <!-- LEFT PANEL: Core Values (Card Format) & FAQ -->
+        <div class="about-panel-box">
+            <h2 class="underline-title">Our Core Values</h2>
+            
+            <div class="values-cards-container">
+                <!-- Card 1 -->
+                <div class="value-card">
+                    <div class="card-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div class="card-text">
+                        <h4>AI - Powered Planning</h4>
+                        <p>Our AI analyzes your preferences and suggests perfect destinations without you needing to know where to go.</p>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="value-card">
+                    <div class="card-icon"><i class="fa-solid fa-wallet"></i></div>
+                    <div class="card-text">
+                        <h4>Smart Budgeting</h4>
+                        <p>Get accurate cost estimations using our model and real-time data to keep your trip stress-free.</p>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="value-card">
+                    <div class="card-icon"><i class="fa-solid fa-cloud-sun"></i></div>
+                    <div class="card-text">
+                        <h4>Real-Time Adaptation</h4>
+                        <p>Plans adjust based on weather, events, and your changing preferences on the go.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-section-container">
+                <h3 class="underline-title">Frequently asked questions:</h3>
+                <div class="faq-simple-box">
+                    <p><strong>Q: How does the AI destination finder work?</strong></p>
+                    <p>A: It analyzes your vibe, budget, duration and preferences to suggest matches.</p>
+                </div>
+                <div class="faq-simple-box">
+                    <p><strong>Q: Is GlobeMate free to use?</strong></p>
+                    <p>A: Yes! Basic features are completely free.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: Story & New Image -->
+        <div class="about-panel-box">
+            <div class="story-block">
+                <h2 class="underline-title">GlobeMate</h2>
+                <p>GlobeMate is an AI-based travel planning application meant to revolutionize the way travel planning and experience are done. The word "GlobeMate" is a combination of <strong>Globe</strong> (global travelling) and <strong>Mate</strong> (a close friend).</p>
+            </div>
+
+            <div class="story-block" style="margin-top: 40px;">
+                <h2 class="underline-title">Our Story</h2>
+                <p>GlobeMate started as a Final Year Project at London Metropolitan University, aiming to solve the overwhelming problem of travel planning. Today, we help thousands of travelers discover their perfect journeys.</p>
+            </div>
+
+            <!-- Added Image below our story -->
+            <div class="story-image-wrapper">
+                <img src="/static/images/travel.png" alt="Our Journey" class="story-footer-img">
+            </div>
+            
+        </div>
+
+    </div>
+</section>
+{% endblock %}

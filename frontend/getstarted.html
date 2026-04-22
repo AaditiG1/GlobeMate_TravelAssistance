@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to GlobeMate</title>
+    <!-- Font Awesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="landing-body">
+    
+    <!-- 1. MINIMAL NAVIGATION (Just for Landing) -->
+    <nav class="landing-nav">
+        <div class="nav-container">
+            <div class="landing-logo">
+                <img src="/static/images/logo.png" alt="GlobeMate">
+                <span>GLOBEMATE</span>
+            </div>
+            <div class="nav-auth-buttons">
+                <a href="/login" class="nav-login-link">Login</a>
+                <a href="/register" class="nav-signup-btn">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="landing-page-container">
+        
+        <!-- 2. HERO SECTION -->
+        <section class="hero-section-split">
+            <div class="hero-content-left animate-fade-in">
+                <h1 class="main-headline">Explore the World, <br><span class="cyan-text">Your Way.</span></h1>
+                <p class="hero-subtext">
+                    "Plan smart trips with AI." <br>
+                    Join thousands of travelers making seamless memories with personalized itineraries.
+                </p>
+                
+                <div class="hero-actions">
+                    <button class="cta-plan-btn" onclick="window.location.href='/register'">
+                        Get Started <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                    <div class="search-mini-bar">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Where to next?">
+                    </div>
+                </div>
+
+                <div class="social-proof">
+                    <span>Trusted by travelers</span>
+                </div>
+            </div>
+
+            <div class="hero-visual-right animate-float">
+                <div class="featured-dest-card">
+                    <img src="/static/images/getstarted.png">
+                    <div class="dest-card-info">
+                        <div class="badge-row">
+                            <span class="feat-badge">Plan the perfect destination</span>
+                        </div>
+                        <h4>GlobeMate – Travel, Personalized to Perfection.</h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. FEATURE SECTION (From your Sketch) -->
+        <section class="features-section">
+            <div class="section-header">
+                <h2>Why Choose GlobeMate?</h2>
+                <p>Everything you need to orchestrate the perfect travel experience.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="f-icon-box cyan-bg"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <h3>AI Destination Discovery</h3>
+                    <p>No manual input needed. Tell us your vibe, and we find your perfect match.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="f-icon-box blue-bg"><i class="fa-solid fa-wallet"></i></div>
+                    <h3>Smart Budget Estimation</h3>
+                    <p>Keep your travel expenses organized with precision ML-based cost tracking.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="f-icon-box orange-bg"><i class="fa-solid fa-cloud-sun"></i></div>
+                    <h3>Weather-Aware Itinerary</h3>
+                    <p>Dynamic schedules that adjust to local forecasts automatically.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="f-icon-box green-bg"><i class="fa-solid fa-robot"></i></div>
+                    <h3>AI Chatbot Assistant</h3>
+                    <p>Your 24/7 personal travel mate for instant changes and local tips.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>

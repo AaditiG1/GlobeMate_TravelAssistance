@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Plan Trip - GlobeMate{% endblock %}
+
+{% block content %}
+<!-- 1. Flatpickr CSS for the Calendar -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
+<link rel="stylesheet" href="/static/plantrip.css">
+
+<section class="plan-trip-container">
+    <!-- Hero Banner Area -->
+    <div class="trip-hero-banner" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/static/images/ocean.png');">
+        <div class="hero-text">
+            <h1>Plan your perfect trip</h1>
+            <p>Let AI find destinations that match your vibe</p>
+        </div>
+    </div>
+
+    <!-- Floating Form Card -->
+    <div class="plan-trip-card-floating">
+        <div class="card-step-header">
+            <span class="step-badge">1</span>
+            <h3>Step 1: Tell us your travel vibe</h3>
+        </div>
+
+        <form id="vibeForm" action="/plan-trip" method="POST" class="modern-trip-form">
+            
+            <!-- 1. Trip Name -->
+            <div class="form-group full-width">
+                <label>Trip Name</label>
+                <div class="input-wrapper">
+                    <input type="text" id="trip_name" name="trip_name" placeholder="e.g., Summer Adventure in Bali" required>
+                </div>
+            </div>
+
+            <div class="form-row-split">
+                <!-- 2. Date Range Picker -->
+                <div class="form-group">
+                    <label>Travel Date Range</label>
+                    <div class="input-wrapper icon-left" id="calendar-trigger">
+                        <i class="fa-regular fa-calendar" style="cursor: pointer; z-index: 10;"></i>
+                        <input type="text" id="dateRangePicker" name="date_range" placeholder="Select Start - End Dates" required>
+                    </div>
+                </div>
+
+                <!-- 3. Duration -->
+                <div class="form-group small-width">
+                    <label>No. of days</label>
+                    <div class="input-wrapper icon-left">
+                        <i class="fa-regular fa-clock"></i>
+                        <input type="number" name="duration" id="durationOutput" placeholder="0" readonly required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Traveler Type Selection -->
+            <div class="form-group full-width">
+                <label>Traveler Type</label>
+                <div class="input-wrapper icon-left icon-right">
+                    <i class="fa-solid fa-users"></i>
+                    <select id="traveler_type" name="traveler_type" required>
+                        <option value="" disabled selected>Select style</option>
+                        <option value="solo">Solo</option>
+                        <option value="couple">Couple</option>
+                        <option value="family">Family</option>
+                        <option value="group">Group</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down select-arrow"></i>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="continue-vibe-btn">
+                Continue to Vibe Selection <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </form>
+    </div>
+</section>
+
+<!-- MODAL HTML (The Pop-up) -->
+<div id="tripModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content animate-pop">
+        <div class="modal-icon" id="modalIcon">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <h2 id="modalTitle">Setting the Vibe</h2>
+        <p id="modalMessage">Preparing your personal discovery engine...</p>
+        <div id="modalLoading" class="loading-spinner"></div>
+        <button id="modalCloseBtn" class="modal-dismiss-btn" onclick="closeTripPopup()" style="display: none;">Try Again</button>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    // 1. Initialize Calendar
+    const picker = flatpickr("#dateRangePicker", {
+        mode: "range",          
+        minDate: "today",       
+        dateFormat: "Y-m-d",    
+        altInput: true,         
+        altFormat: "M j, Y",    
+        onClose: function(selectedDates) {
+            if (selectedDates.length === 2) {
+                const diffTime = Math.abs(selectedDates[1] - selectedDates[0]);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                document.getElementById('durationOutput').value = diffDays;
+            }
+        }
+    });
+
+    document.getElementById('calendar-trigger').addEventListener('click', () => picker.open());
+
+    // 2. Pop-up & Form Submission Logic
+    const form = document.getElementById('vibeForm');
+    const modal = document.getElementById('tripModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMsg = document.getElementById('modalMessage');
+    const modalIcon = document.getElementById('modalIcon');
+    const modalSpinner = document.getElementById('modalLoading');
+    const modalBtn = document.getElementById('modalCloseBtn');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault(); // Pause submission
+
+        const tripName = document.getElementById('trip_name').value;
+        const duration = document.getElementById('durationOutput').value;
+        const traveler = document.getElementById('traveler_type').value;
+
+        // Validation Error Pop-up
+        if (!tripName || duration == 0 || !traveler) {
+            showTripPopup("Hold on!", "Please complete all fields so GlobeMate can find the best matches for you.", "error");
+            return;
+        }
+
+        // Success / Progress Pop-up
+        showTripPopup("Creating Trip...", "Initializing AI engine for " + tripName + ". Hang tight!", "loading");
+
+        // Short delay for the "Cool Factor"
+        setTimeout(() => {
+            form.submit();
+        }, 1800);
+    });
+
+    function showTripPopup(title, message, type) {
+        modalTitle.innerText = title;
+        modalMsg.innerText = message;
+        modal.style.display = 'flex';
+
+        if (type === 'error') {
+            modalIcon.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="color: #e07a5f;"></i>';
+            modalSpinner.style.display = 'none';
+            modalBtn.style.display = 'inline-block';
+        } else {
+            modalIcon.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles" style="color: #A3B1AA;"></i>';
+            modalSpinner.style.display = 'block';
+            modalBtn.style.display = 'none';
+        }
+    }
+
+    function closeTripPopup() {
+        modal.style.display = 'none';
+    }
+</script>
+{% endblock %}

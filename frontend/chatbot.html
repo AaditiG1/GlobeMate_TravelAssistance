@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}GlobeMate AI Assistant{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/tripresult.css">
+
+<section class="chatbot-page-wrapper" style="background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('/static/images/ocean.png');">
+    
+    <div class="page-intro">
+        <h1>AI Plan <span style="color: #A3B1AA;">Manager</span></h1>
+        <p>Currently managing your <strong>{{ trip.duration }}-Day Trip</strong> to <strong>{{ trip.selected_dest }}</strong>.</p>
+    </div>
+
+    <div class="chatbot-dual-layout">
+        
+        <!-- LEFT: DYNAMIC ITINERARY TIMELINE -->
+        <div class="itinerary-timeline" id="itinerarySection">
+            <h3 class="panel-title-underlined"><i class="fa-solid fa-route"></i> Your Journey Schedule</h3>
+            
+            {% if itinerary %}
+                {% for day in itinerary %}
+                <div class="day-card-modern {% if day.status == 'missed' %}day-missed{% elif day.status == 'rescheduled' %}day-updated{% endif %}" id="day-card-{{ day.day }}">
+                    <div class="day-label">Day {{ day.day }}</div>
+                    <div class="day-details">
+                        <h4>{{ day.title }}</h4>
+                        <ul class="activity-list">
+                            {% for act in day.activities %}
+                            <li>
+                                <span class="t-stamp">{{ act.time }}</span> 
+                                {{ act.desc }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% if day.status == 'rescheduled' %}
+                            <p style="color: #A3B1AA; font-size: 0.8rem; margin-top: 10px; font-weight: bold;">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Rescheduled by AI
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>Generating your optimal itinerary...</p>
+            {% endif %}
+        </div>
+
+        <!-- RIGHT: THE AI CHATBOT INTERFACE -->
+        <div class="chat-interface-panel">
+            <div class="chat-header-dark">
+                <div class="mate-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div class="mate-info">
+                    <strong style="display: block;">GlobeMate AI</strong>
+                    <span style="font-size: 0.7rem; color: #4CAF50;">● Online & Ready</span>
+                </div>
+            </div>
+
+            <!-- SUCCESS PILLAR: LOAD CHAT HISTORY -->
+            <div class="chat-display" id="chatDisplay">
+                {% if chat_history %}
+                    {% for chat in chat_history %}
+                        <div class="bubble {{ 'user-bubble' if chat.role == 'user' else 'ai-bubble' }}">
+                            {{ chat.content | safe }}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <!-- Initial Welcome Message (Only shows if history is empty) -->
+                    <div class="bubble ai-bubble">
+                        Hello {{ user.full_name.split(' ')[0] }}! I've generated your itinerary for {{ trip.selected_dest }}. 
+                        <br><br>
+                        If you miss a day, feel tired, or want to change a spot, just tell me!
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="chat-input-row">
+                <input type="text" id="userInput" placeholder="Type a message to update your plan..." autocomplete="off">
+                <button onclick="sendMessage()" class="chat-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script>
+    const chatDisplay = document.getElementById("chatDisplay");
+    const userInput = document.getElementById("userInput");
+
+    // AUTO-SCROLL TO BOTTOM ON LOAD
+    window.onload = function() {
+        chatDisplay.scrollTop = chatDisplay.scrollHeight;
+    };
+
+    userInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendMessage();
+    });
+
+    async function sendMessage() {
+        const message = userInput.value.trim();
+        if (!message) return;
+
+        const userDiv = document.createElement("div");
+        userDiv.className = "bubble user-bubble";
+        userDiv.innerText = message;
+        chatDisplay.appendChild(userDiv);
+        
+        userInput.value = "";
+        chatDisplay.scrollTo({ top: chatDisplay.scrollHeight, behavior: 'smooth' });
+
+        const loadingId = "loading-" + Date.now();
+        const aiDiv = document.createElement("div");
+        aiDiv.className = "bubble ai-bubble";
+        aiDiv.id = loadingId;
+        aiDiv.innerText = "GlobeMate is processing...";
+        chatDisplay.appendChild(aiDiv);
+
+        try {
+            const response = await fetch("/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: message })
+            });
+            const data = await response.json();
+
+            // SUCCESS MOVE: Use innerHTML to allow AI formatting
+            document.getElementById(loadingId).innerHTML = data.reply.replace(/\n/g, '<br>');
+
+            if (data.update) {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            }
+
+        } catch (error) {
+            document.getElementById(loadingId).innerText = "Error: Connection lost. Please refresh.";
+        }
+        
+        chatDisplay.scrollTo({ top: chatDisplay.scrollHeight, behavior: 'smooth' });
+    }
+</script>
+{% endblock %}

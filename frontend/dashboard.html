@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}GlobeMate Admin - Dashboard{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/dashboard.css">
+<!-- Link the new separate modal CSS -->
+<link rel="stylesheet" href="/static/admin-modal.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div id="dashboard-data-bridge" 
+     data-vibe-labels='{{ vibe_labels | tojson }}' 
+     data-vibe-counts='{{ vibe_counts | tojson }}'
+     data-dest-labels='{{ dest_labels | tojson }}' 
+     data-dest-counts='{{ dest_counts | tojson }}'
+     style="display: none;">
+</div>
+
+<div class="admin-main-wrapper">
+    <div class="admin-dashboard-container">
+        
+        <header class="admin-top-header">
+            <div class="breadcrumb">Admin Terminal / <strong>System Overview</strong></div>
+        </header>
+
+        <!-- KPI STATS ROW -->
+        <div class="stats-card-grid">
+            <div class="stat-card-colored card-red">
+                <div class="stat-text"><h2>{{ total_users }}</h2><p>Total Travelers</p></div>
+                <div class="stat-icon-bg"><i class="fa-solid fa-users"></i></div>
+            </div>
+            <div class="stat-card-colored card-blue">
+                <div class="stat-text"><h2>{{ trips_planned }}</h2><p>Plans Created</p></div>
+                <div class="stat-icon-bg"><i class="fa-solid fa-plane-up"></i></div>
+            </div>
+            <div class="stat-card-colored card-purple">
+                <div class="stat-text"><h2>{{ ai_predictions }}</h2><p>AI Finalized</p></div>
+                <div class="stat-icon-bg"><i class="fa-solid fa-brain"></i></div>
+            </div>
+            <div class="stat-card-colored card-green">
+                <div class="stat-text"><h2>{{ destinations }}</h2><p>Destinations</p></div>
+                <div class="stat-icon-bg"><i class="fa-solid fa-map-location-dot"></i></div>
+            </div>
+        </div>
+
+        <!-- ANALYTICS GRID -->
+        <div class="analytics-main-grid">
+            <div class="white-panel-card">
+                <div class="panel-header"><h3><i class="fa-solid fa-chart-pie"></i> Vibe Distribution</h3></div>
+                <div class="chart-wrapper"><canvas id="vibeChart"></canvas></div>
+            </div>
+
+            <div class="white-panel-card">
+                <div class="panel-header">
+                    <h3><i class="fa-solid fa-clock-rotate-left"></i> Recent Trip Activity</h3>
+                    <span class="badge-live">Live Feed</span>
+                </div>
+                <ul class="activity-log-list">
+                    {% if recent_trips %}
+                        {% for trip in recent_trips %}
+                        <li class="log-item animate-fade-in">
+                            <div class="log-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                            <div class="log-info">
+                                <strong>New Plan: "{{ trip.trip_name }}"</strong>
+                                <p>{{ trip.selected_dest if trip.selected_dest else "Selection in progress..." }}</p>
+                            </div>
+                            <div class="log-time nepali-date-track" data-time="{{ trip.created_at.isoformat() }}Z">Calculating...</div>
+                        </li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- USER MANAGEMENT -->
+        <div class="white-panel-card user-management-section" style="margin-top: 25px;">
+            <div class="panel-header">
+                <h3><i class="fa-solid fa-users-gear"></i> User Management</h3>
+                <div class="search-box-mini"><input type="text" id="systemSearch" placeholder="Search accounts..."></div>
+            </div>
+            <div class="table-responsive">
+                <table class="admin-user-table" id="userTable">
+                    <thead>
+                        <tr><th>ID</th><th>User Name</th><th>Email Address</th><th>Role</th><th style="text-align: right;">Action</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users_list %}
+                        <tr>
+                            <td>#{{ user.id }}</td>
+                            <td><strong>{{ user.full_name }}</strong></td>
+                            <td>{{ user.email }}</td>
+                            <td><span class="role-badge">{{ user.role.upper() }}</span></td>
+                            <td style="text-align: right;">
+                                <!-- Updated Delete Button -->
+                                <button type="button" class="btn-delete" onclick="openAdminDeleteModal('{{ user.id }}', '{{ user.full_name }}')">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                                <form id="delete-user-form-{{ user.id }}" action="/admin/delete-user/{{ user.id }}" method="POST" style="display:none;"></form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADMIN ACTION MODAL -->
+<div id="adminModal" class="admin-modal-overlay" style="display: none;">
+    <div class="admin-modal-content animate-pop">
+        <div class="admin-modal-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h3 id="adminModalTitle">Confirm Action</h3>
+        <p id="adminModalMsg">Are you sure you want to proceed?</p>
+        <div class="admin-modal-footer">
+            <button class="admin-btn-secondary" onclick="closeAdminModal()">Cancel</button>
+            <button id="adminModalConfirmBtn" class="admin-btn-danger">Confirm Delete</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- MODAL LOGIC ---
+    const adminModal = document.getElementById('adminModal');
+    const adminModalTitle = document.getElementById('adminModalTitle');
+    const adminModalMsg = document.getElementById('adminModalMsg');
+    const adminConfirmBtn = document.getElementById('adminModalConfirmBtn');
+
+    function openAdminDeleteModal(userId, userName) {
+        adminModalTitle.innerText = "Terminate Account";
+        adminModalMsg.innerHTML = `Are you sure you want to permanently delete <strong>${userName}</strong>? This action cannot be reversed.`;
+        adminModal.style.display = 'flex';
+        
+        adminConfirmBtn.onclick = function() {
+            document.getElementById('delete-user-form-' + userId).submit();
+        };
+    }
+
+    function closeAdminModal() {
+        adminModal.style.display = 'none';
+    }
+
+    // (Keep your existing Chart and Nepali Time scripts below...)
+    function formatToNepaliTime(dateString) {
+        const past = new Date(dateString);
+        const now = new Date();
+        const seconds = Math.floor((now - past) / 1000);
+        if (seconds < 60) return "Just now";
+        if (seconds < 3600) return Math.floor(seconds / 60) + "m ago";
+        if (seconds < 86400) return Math.floor(seconds / 3600) + "h ago";
+        return past.toLocaleDateString('en-NP', { month: 'short', day: 'numeric' });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll('.nepali-date-track').forEach(el => {
+            el.innerText = formatToNepaliTime(el.getAttribute('data-time'));
+        });
+
+        const bridge = document.getElementById('dashboard-data-bridge');
+        const vibeL = JSON.parse(bridge.getAttribute('data-vibe-labels') || '[]');
+        const vibeC = JSON.parse(bridge.getAttribute('data-vibe-counts') || '[]');
+
+        new Chart(document.getElementById('vibeChart').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: vibeL,
+                datasets: [{
+                    data: vibeC,
+                    backgroundColor: ['#2D1B10', '#A3B1AA', '#E07A5F', '#81B29A', '#F2CC8F'],
+                    borderWidth: 0
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, cutout: '70%' }
+        });
+    });
+
+    document.getElementById('systemSearch').addEventListener('keyup', function() {
+        let filter = this.value.toUpperCase();
+        let rows = document.getElementById('userTable').getElementsByTagName('tr');
+        for (let i = 1; i < rows.length; i++) {
+            rows[i].style.display = rows[i].innerText.toUpperCase().includes(filter) ? "" : "none";
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/admin_notification.css">
+
+<div class="admin-dashboard-wrapper">
+    <header class="dashboard-header">
+        <div class="header-text">
+            <h1>Broadcast <span class="accent">Control</span></h1>
+            <p>Direct communication channel to all GlobeMate travelers.</p>
+        </div>
+    </header>
+
+    <section class="compose-area">
+        <div class="card-glass">
+            <!-- Simplified Form: No complex JS intercept -->
+            <form action="/admin/notifications/broadcast" method="POST" class="broadcast-form" id="broadcastForm">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Announcement Title</label>
+                        <input type="text" name="title" placeholder="e.g. System Maintenance" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Category</label>
+                        <select name="notif_type">
+                            <option value="ai">✨ AI Updates</option>
+                            <option value="info">📢 General Info</option>
+                            <option value="warning">⚠️ System Alert</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Broadcast Message</label>
+                    <textarea name="message" rows="3" placeholder="What would you like to tell the users?" required></textarea>
+                </div>
+                <div class="form-actions">
+                    <span class="security-note"><i class="fas fa-shield-alt"></i> Notifies all users instantly.</span>
+                    <button type="submit" class="btn-primary" id="launchBtn">Launch Broadcast</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- HISTORY FEED -->
+    <section class="history-section">
+        <h2 class="sub-title">Communication History</h2>
+        <div class="feed-grid">
+            {% for n in history %}
+            <div class="feed-card {{ n.notif_type }}">
+                <div class="card-indicator"></div>
+                <div class="card-main">
+                    <div class="card-header">
+                        <h3>{{ n.title }}</h3>
+                        <span class="card-time time-track" data-time="{{ n.created_at.isoformat() }}Z">...</span>
+                    </div>
+                    <p class="card-body">{{ n.message }}</p>
+                    <div class="card-footer">
+                        <span class="type-pill">{{ n.notif_type|upper }}</span>
+                        <button type="button" class="btn-delete" onclick="openDeletePopup('{{ n.id }}', '{{ n.title|e }}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+<!-- POPUP 1: DELETE CONFIRMATION -->
+<div class="popup-overlay" id="deletePopup">
+    <div class="popup-box animate-pop">
+        <div class="popup-icon icon-danger"><i class="fas fa-trash"></i></div>
+        <h3>Delete this record?</h3>
+        <p>Permanently remove <strong id="popupNotifName"></strong> for everyone.</p>
+        <div class="popup-actions">
+            <button type="button" class="btn-cancel" onclick="closeDeletePopup()">Cancel</button>
+            <form id="deleteForm" method="POST" style="margin: 0;">
+                <button type="submit" class="btn-danger-confirm">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- POPUP 2: SUCCESS MESSAGE -->
+<div class="popup-overlay" id="successPopup">
+    <div class="popup-box animate-pop">
+        <div class="popup-icon icon-success"><i class="fas fa-check-circle"></i></div>
+        <h3>Broadcast Launched!</h3>
+        <p>The announcement has been pushed to every registered user's dashboard.</p>
+        <div class="popup-actions">
+            <button type="button" class="btn-confirm-success" onclick="closeSuccessPopup()">OK</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. Check URL for success message
+    document.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('msg') === 'sent') {
+            document.getElementById('successPopup').style.display = 'flex';
+        }
+
+        // Apply time tracking
+        document.querySelectorAll('.time-track').forEach(el => {
+            el.innerText = timeSince(el.getAttribute('data-time'));
+        });
+    });
+
+    function closeSuccessPopup() {
+        window.location.href = window.location.pathname; // Clear ?msg=sent from URL
+    }
+
+    // 2. Delete Popup
+    function openDeletePopup(id, title) {
+        document.getElementById('deleteForm').action = `/admin/notifications/delete/${id}`;
+        document.getElementById('popupNotifName').innerText = title;
+        document.getElementById('deletePopup').style.display = 'flex';
+    }
+
+    function closeDeletePopup() {
+        document.getElementById('deletePopup').style.display = 'none';
+    }
+
+    // Nepali Time Logic
+    function timeSince(dateString) {
+        const past = new Date(dateString);
+        const now = new Date();
+        const seconds = Math.floor((now - past) / 1000);
+        if (seconds < 60) return "Just now";
+        const minutes = Math.floor(seconds / 60);
+        if (minutes < 60) return minutes + "m ago";
+        const hours = Math.floor(minutes / 60);
+        if (hours < 24) return hours + "h ago";
+        return past.toLocaleDateString('en-NP');
+    }
+</script>
+{% endblock %}

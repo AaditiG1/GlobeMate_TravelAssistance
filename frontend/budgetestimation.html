@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+
+{% block title %}Budget & Duration - GlobeMate{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="/static/budget.css">
+<section class="budget-portal-wrapper">
+    <div class="budget-main-container">
+        
+        <!-- HEADER -->
+        <header class="budget-header animate-fade-down">
+            <div class="header-text">
+                <h1>Budget & Style <span class="text-sage">Configuration</span></h1>
+                <p>Fine-tuning the financial engine for <strong>"{{ trip_name }}"</strong></p>
+            </div>
+            <div class="duration-badge">
+                <i class="fa-solid fa-clock-rotate-left"></i> <span id="daysCount">{{ duration }}</span> Day Journey
+            </div>
+        </header>
+
+        <form id="budgetForm" action="/find-destination" method="POST" class="budget-grid">
+            
+            <!-- LEFT COLUMN: USER SELECTIONS -->
+            <div class="budget-input-column animate-fade-up">
+                
+                <!-- 1. Total Budget Input -->
+                <div class="input-group-fancy">
+                    <label class="section-label">Investment Amount</label>
+                    <div class="styled-input-wrapper">
+                        <i class="fa-solid fa-wallet"></i>
+                        <input type="number" name="budget_amount" id="budgetInput" value="25000" min="1000" step="500" required>
+                        <span class="currency-tag">Rs.</span>
+                    </div>
+                    <small class="input-hint" style="color: #64748b; font-weight: 600;">
+                         <i class="fa-solid fa-circle-info"></i> Please enter a numeric value for your total budget.
+                         </small>
+                </div>
+
+                <!-- 2. Travel Style Selection -->
+                <div class="style-selection-area">
+                    <label class="section-label">Travel Luxury Tier</label>
+                    <div class="style-cards-grid">
+                        <label class="style-card">
+                            <input type="radio" name="style" value="budget" onchange="updateBars()">
+                            <div class="card-inner">
+                                <div class="card-img-box"><img src="/static/images/simple.png" alt="Simple"></div>
+                                <div class="card-body">
+                                    <h4>Simple</h4>
+                                    <p>Economic hostels & local transit.</p>
+                                </div>
+                            </div>
+                        </label>
+
+                        <label class="style-card">
+                            <input type="radio" name="style" value="moderate" checked onchange="updateBars()">
+                            <div class="card-inner">
+                                <div class="card-img-box"><img src="/static/images/moderate.png" alt="Moderate"></div>
+                                <div class="card-body">
+                                    <h4>Moderate</h4>
+                                    <p>Quality hotels & comfort dining.</p>
+                                </div>
+                            </div>
+                        </label>
+
+                        <label class="style-card">
+                            <input type="radio" name="style" value="luxury" onchange="updateBars()">
+                            <div class="card-inner">
+                                <div class="card-img-box"><img src="/static/images/luxury.png" alt="Luxury"></div>
+                                <div class="card-body">
+                                    <h4>Luxury</h4>
+                                    <p>Villas, fine dining & private cars.</p>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 3. Priority Allocation -->
+                <div class="priorities-area">
+                    <h3 class="section-label-alt"><i class="fa-solid fa-sliders"></i> Adjust Resource Allocation</h3>
+                    
+                    <div class="priority-row">
+                        <div class="row-info">
+                            <div class="p-icon"><i class="fa-solid fa-hotel"></i></div>
+                            <div class="p-text">
+                                <strong>Accommodation</strong>
+                                <span>Stays and resorts</span>
+                            </div>
+                        </div>
+                        <div class="segmented-control">
+                            <label><input type="radio" name="acc" value="save" onchange="updateBars()"><span>SAVE</span></label>
+                            <label><input type="radio" name="acc" value="balanced" checked onchange="updateBars()"><span>BALANCED</span></label>
+                            <label><input type="radio" name="acc" value="splurge" onchange="updateBars()"><span>SPLURGE</span></label>
+                        </div>
+                    </div>
+
+                    <div class="priority-row">
+                        <div class="row-info">
+                            <div class="p-icon"><i class="fa-solid fa-utensils"></i></div>
+                            <div class="p-text">
+                                <strong>Food & Dining</strong>
+                                <span>Local eats & fine meals</span>
+                            </div>
+                        </div>
+                        <div class="segmented-control">
+                            <label><input type="radio" name="food" value="save" onchange="updateBars()"><span>SAVE</span></label>
+                            <label><input type="radio" name="food" value="balanced" checked onchange="updateBars()"><span>BALANCED</span></label>
+                            <label><input type="radio" name="food" value="splurge" onchange="updateBars()"><span>SPLURGE</span></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: AI BREAKDOWN SIDEBAR -->
+            <aside class="budget-breakdown-sidebar animate-fade-up" style="animation-delay: 0.2s;">
+                <div class="breakdown-card">
+                    <div class="breakdown-header">
+                        <h3>AI Predictive Breakdown</h3>
+                        <i class="fa-solid fa-brain-circuit"></i>
+                    </div>
+                    
+                    <div class="daily-spend-box">
+                        <label>ESTIMATED DAILY SPEND</label>
+                        <div class="price-display" id="dailySpendText">Rs. 0.00 <span>/ day</span></div>
+                    </div>
+
+                    <div class="progress-stats">
+                        <div class="stat-item">
+                            <div class="stat-header"><span>Accommodation</span> <strong id="accPercent">40%</strong></div>
+                            <div class="bar"><div class="fill" id="accBar" style="width: 40%;"></div></div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-header"><span>Food & Dining</span> <strong id="foodPercent">35%</strong></div>
+                            <div class="bar"><div class="fill" id="foodBar" style="width: 35%;"></div></div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-header"><span>Activities & Transit</span> <strong id="miscPercent">25%</strong></div>
+                            <div class="bar"><div class="fill" id="miscBar" style="width: 25%;"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="total-planned-row">
+                        <span>Total Planned</span>
+                        <strong id="totalSpendText">Rs. 0.00</strong>
+                    </div>
+
+                    <button type="submit" class="calculate-btn">
+                        Find Best Destination with AI <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </button>
+                    
+                    <div class="ai-guarantee">
+                        <i class="fa-solid fa-shield-check"></i>
+                        <span>AI verifies budget compatibility against 25k destinations.</span>
+                    </div>
+                </div>
+            </aside>
+        </form>
+    </div>
+</section>
+
+<!-- MODAL POP-UP -->
+<div id="budgetModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content animate-pop">
+        <div class="modal-icon" id="budgetModalIcon"></div>
+        <h2 id="budgetModalTitle"></h2>
+        <p id="budgetModalMessage"></p>
+        <div id="budgetModalLoading" class="loading-spinner"></div>
+        <button id="budgetModalCloseBtn" class="calculate-btn" onclick="closeBudgetPopup()" style="display: none; width: auto; margin: 10px auto 0;">Edit Budget</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const budgetForm = document.getElementById('budgetForm');
+        const budgetInput = document.getElementById('budgetInput');
+        const dailyDisplay = document.getElementById('dailySpendText');
+        const totalDisplay = document.getElementById('totalSpendText');
+        
+        // Modal Elements
+        const modal = document.getElementById('budgetModal');
+        const modalTitle = document.getElementById('budgetModalTitle');
+        const modalMsg = document.getElementById('budgetModalMessage');
+        const modalIcon = document.getElementById('budgetModalIcon');
+        const modalSpinner = document.getElementById('budgetModalLoading');
+        const modalBtn = document.getElementById('budgetModalCloseBtn');
+
+        const duration = parseInt("{{ duration }}") || 1; 
+
+        // 1. LIVE BAR UPDATES
+        window.updateBars = function() {
+            const totalBudget = parseFloat(budgetInput.value) || 0;
+            const daily = (totalBudget / duration).toFixed(2);
+            dailyDisplay.innerHTML = `Rs. ${parseFloat(daily).toLocaleString()} <span>/ day</span>`;
+            totalDisplay.innerText = `Rs. ${totalBudget.toLocaleString()}`;
+
+            const styleVal = document.querySelector('input[name="style"]:checked').value;
+            const accVal = document.querySelector('input[name="acc"]:checked').value;
+            const foodVal = document.querySelector('input[name="food"]:checked').value;
+
+            // Baseline logic based on "Luxury Tier"
+            let accP = 40; let foodP = 35; 
+            if(styleVal === 'budget') { accP = 30; foodP = 25; }
+            if(styleVal === 'luxury') { accP = 50; foodP = 40; }
+
+            // Modifier logic based on "Priority Allocation"
+            if(accVal === 'save') accP -= 10; if(accVal === 'splurge') accP += 15;
+            if(foodVal === 'save') foodP -= 10; if(foodVal === 'splurge') foodP += 15;
+
+            // Final Calculation
+            let miscP = 100 - (accP + foodP); 
+            if (miscP < 5) { // Ensure activities don't hit 0%
+                miscP = 5;
+                // Scale down others proportionally if over 100%
+                let diff = (accP + foodP + miscP) - 100;
+                accP -= diff/2;
+                foodP -= diff/2;
+            }
+
+            document.getElementById('accPercent').innerText = Math.round(accP) + '%';
+            document.getElementById('accBar').style.width = accP + '%';
+            document.getElementById('foodPercent').innerText = Math.round(foodP) + '%';
+            document.getElementById('foodBar').style.width = foodP + '%';
+            document.getElementById('miscPercent').innerText = Math.round(miscP) + '%';
+            document.getElementById('miscBar').style.width = miscP + '%';
+        }
+
+        budgetInput.addEventListener('input', updateBars);
+        updateBars(); // Run once on load
+
+        // 2. FORM SUBMISSION
+        budgetForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amount = parseFloat(budgetInput.value);
+
+            if (amount < 2000) {
+                showBudgetPopup("Budget Too Low", "To ensure a quality experience, please enter a budget of at least Rs. 2,000.", "error");
+                return;
+            }
+
+            showBudgetPopup("Finding Best Value", `GlobeMate is running the financial regression model for ${duration} days...`, "loading");
+            
+            setTimeout(() => {
+                budgetForm.submit();
+            }, 1800);
+        });
+
+        function showBudgetPopup(title, message, type) {
+            modalTitle.innerText = title;
+            modalMsg.innerText = message;
+            modal.style.display = 'flex';
+
+            if (type === 'error') {
+                modalIcon.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="color: #e07a5f; font-size: 3rem;"></i>';
+                modalSpinner.style.display = 'none';
+                modalBtn.style.display = 'block';
+            } else {
+                modalIcon.innerHTML = '<i class="fa-solid fa-microchip fa-spin" style="color: #8da290; font-size: 3rem;"></i>';
+                modalSpinner.style.display = 'block';
+                modalBtn.style.display = 'none';
+            }
+        }
+
+        window.closeBudgetPopup = function() {
+            modal.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}
